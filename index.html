@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#0c0c0f"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="icon" href="icon.svg"/>
+<link rel="apple-touch-icon" href="icon.svg"/>
+<title>DeliveryBuddy MK2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{
+    --orange:#f97316;--orange-dim:rgba(249,115,22,.12);--orange-border:rgba(249,115,22,.3);
+    --bg:#0c0c0f;--card:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+    --text:#f5f5f5;--muted:#6b7280;--faint:#374151;
+    --green:#4ade80;--yellow:#fbbf24;--red:#f87171;--lime:#a3e635;--blue:#60a5fa;--purple:#c084fc;
+  }
+  html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overscroll-behavior:none}
+  .mono{font-family:'Space Mono',monospace}
+  input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.12);outline:none;cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--orange);cursor:pointer}
+  input[type=number],input[type=text]{-moz-appearance:textfield}
+  input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+  button{font-family:'Syne',sans-serif;cursor:pointer;border:none}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px}
+  .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px}
+  .fade{animation:fi .25s ease}
+  @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+  .tab-bar{display:flex;gap:5px;padding:14px 12px 0}
+  .tab{flex:1;padding:8px 0;border-radius:8px;font-size:10.5px;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:.01em;border:none;cursor:pointer;transition:background .15s,color .15s}
+  .tab.active{background:var(--orange);color:#fff}
+  .tab.inactive{background:rgba(255,255,255,.05);color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .tile{background:rgba(0,0,0,.3);border-radius:10px;padding:9px 12px}
+  .tile .tk{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+  .tile .tv{font-family:'Space Mono',monospace;font-size:13px;color:var(--text)}
+  .stop-btn{flex:1;padding:10px 4px;border-radius:10px;border:none;cursor:pointer;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;transition:background .15s,color .15s}
+  .bump-btn{background:rgba(255,255,255,.07);border:none;color:#9ca3af;font-size:22px;width:46px;align-self:stretch;cursor:pointer;font-family:inherit;line-height:1;transition:background .1s}
+  .bump-btn:active{background:rgba(255,255,255,.15)}
+  .analyze-btn{flex:1;padding:15px 0;background:var(--orange);border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:.04em;transition:opacity .1s}
+  .analyze-btn:active{opacity:.8}
+  .clear-btn{padding:15px 18px;background:rgba(255,255,255,.06);border:none;border-radius:12px;color:var(--muted);cursor:pointer;font-size:16px}
+  .rate-track{position:relative;height:6px;background:rgba(255,255,255,.08);border-radius:3px;margin-top:8px}
+  .rate-fill{position:absolute;left:0;top:0;height:100%;border-radius:3px;transition:width .4s ease}
+  .rate-marker{position:absolute;top:-4px;width:2px;height:14px;background:var(--orange);border-radius:1px;transform:translateX(-50%)}
+  .ref-header{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;background:rgba(255,255,255,.04);border-radius:12px 12px 0 0}
+  .ref-header div{padding:9px 12px;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+  .ref-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.05)}
+  .ref-row div{padding:10px 12px;font-family:'Space Mono',monospace;font-size:13px}
+  .ref-row.alt{background:rgba(255,255,255,.02)}
+  #result-card .surplus{margin-top:12px;padding:10px 13px;border-radius:10px;font-size:12px}
+  .plat-row{display:flex;gap:6px}
+  .plat-btn{flex:1;padding:9px 0;border-radius:10px;font-size:12px;font-weight:700;font-family:'Syne',sans-serif;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--muted);transition:background .12s,color .12s,border-color .12s}
+  .plat-btn.on{color:#fff}
+  .decide-row{display:flex;gap:10px;margin-top:14px}
+  .accept-btn{flex:1;padding:14px 0;border-radius:12px;border:none;background:var(--green);color:#06240f;font-size:14px;font-weight:800;letter-spacing:.03em;font-family:'Syne',sans-serif}
+  .decline-btn{flex:1;padding:14px 0;border-radius:12px;border:1px solid rgba(248,113,113,.4);background:rgba(248,113,113,.08);color:var(--red);font-size:14px;font-weight:700;font-family:'Syne',sans-serif}
+  .hold-btn{flex:1;padding:14px 0;border-radius:12px;border:1px solid rgba(192,132,252,.4);background:rgba(192,132,252,.08);color:var(--purple);font-size:14px;font-weight:700;font-family:'Syne',sans-serif}
+  .accept-btn:active,.decline-btn:active,.hold-btn:active{opacity:.8}
+  .quick-btn{width:100%;padding:16px 0;border-radius:14px;border:1px dashed var(--orange-border);background:var(--orange-dim);color:var(--orange);font-size:15px;font-weight:800;letter-spacing:.03em;font-family:'Syne',sans-serif;margin-bottom:12px}
+  .quick-btn:active{opacity:.8}
+  .scan-btn{padding:13px 8px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;color:#cbd5e1;font-size:12px;font-weight:700;font-family:'Syne',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px}
+  .scan-btn:active{opacity:.8}
+  .scan-btn.rec{border-color:var(--red);color:var(--red);background:rgba(248,113,113,.1)}
+  .badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;letter-spacing:.06em;text-transform:uppercase}
+  .b-accepted{background:rgba(74,222,128,.14);color:var(--green)}
+  .b-declined{background:rgba(248,113,113,.14);color:var(--red)}
+  .b-completed{background:rgba(96,165,250,.16);color:var(--blue)}
+  .b-plat{background:rgba(255,255,255,.06);color:#9ca3af}
+  .mini-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:7px;padding:5px 9px;color:#cbd5e1;font-size:10px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer}
+  .mini-btn:active{opacity:.7}
+  .seg{display:flex;gap:6px;margin-bottom:12px}
+  .seg button{flex:1;padding:7px 0;border-radius:8px;font-size:10px;font-weight:700;font-family:'Syne',sans-serif;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--muted)}
+  .seg button.on{background:var(--orange);color:#fff;border-color:transparent}
+  .num{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;padding:11px 12px;font-family:'Space Mono',monospace;font-size:15px;color:#fff;outline:none}
+  .big-stat{font-family:'Space Mono',monospace;font-size:34px;line-height:1;font-weight:700}
+  .goal-track{height:10px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:8px}
+  .goal-fill{height:100%;background:var(--green);border-radius:5px;transition:width .5s ease}
+  .pillbtn{padding:13px 0;border-radius:12px;font-size:14px;font-weight:800;font-family:'Syne',sans-serif;width:100%;letter-spacing:.02em}
+  .start-shift{background:var(--green);color:#06240f}
+  .end-shift{background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.4);color:var(--red)}
+  .ghost{background:rgba(255,255,255,.06);border:1px solid var(--border);color:#cbd5e1;border-radius:12px;padding:13px 0;font-size:13px;font-weight:700;font-family:'Syne',sans-serif;width:100%}
+  .scorering{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Space Mono',monospace;font-weight:700;font-size:20px}
+  /* Driving mode — bigger touch targets + verdict */
+  body.driving #result-card .mono[data-big]{font-size:52px!important}
+  body.driving .accept-btn,body.driving .decline-btn,body.driving .hold-btn{padding:20px 0;font-size:17px}
+  body.driving .analyze-btn{padding:20px 0;font-size:18px}
+  body.driving .quick-btn{padding:20px 0;font-size:17px}
+</style>
+</head>
+<body>
+
+<div style="max-width:460px;margin:0 auto;padding-bottom:84px">
+
+  <!-- Top bar -->
+  <div style="padding:18px 16px 0;display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font-size:10px;color:var(--orange);letter-spacing:.2em;text-transform:uppercase">DeliveryBuddy</div>
+      <div style="font-size:20px;font-weight:800;letter-spacing:-.03em;line-height:1.1">MK2 <span style="font-size:11px;color:var(--muted);font-weight:600">profit copilot</span></div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:10px;color:var(--muted)">Target</div>
+      <div class="mono" style="font-size:18px;color:var(--orange)" id="top-target">$20/hr</div>
+    </div>
+  </div>
+
+  <!-- Shift banner -->
+  <div id="shift-banner" style="display:none;margin:10px 16px 0;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);border-radius:12px;padding:8px 14px;align-items:center;justify-content:space-between">
+    <span style="font-size:12px;color:var(--green);font-weight:700">● On shift <span id="shift-elapsed" class="mono"></span></span>
+    <span style="font-size:11px;color:var(--muted)" id="shift-net"></span>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('calc')" id="tab-calc">Offer</button>
+    <button class="tab inactive" onclick="switchTab('stats')" id="tab-stats">Stats</button>
+    <button class="tab inactive" onclick="switchTab('history')" id="tab-history">History</button>
+    <button class="tab inactive" onclick="switchTab('ref')" id="tab-ref">Min $</button>
+    <button class="tab inactive" onclick="switchTab('settings')" id="tab-settings">More</button>
+  </div>
+
+  <div style="padding:14px 16px 0">
+
+    <!-- ── OFFER TAB ── -->
+    <div id="pane-calc" class="fade">
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Platform</div>
+        <div class="plat-row" id="plat-row">
+          <button class="plat-btn" id="plat-uber"     onclick="setPlatform('uber')">Uber</button>
+          <button class="plat-btn" id="plat-doordash" onclick="setPlatform('doordash')">DoorDash</button>
+          <button class="plat-btn" id="plat-grubhub"  onclick="setPlatform('grubhub')">Grubhub</button>
+          <button class="plat-btn" id="plat-other"    onclick="setPlatform('other')">Other</button>
+        </div>
+        <div id="weather-line" style="font-size:11px;color:var(--muted);margin-top:10px;display:flex;align-items:center;justify-content:space-between">
+          <span id="weather-text">Conditions: tap to check</span>
+          <button class="mini-btn" onclick="checkWeather()">🌦️ Check</button>
+        </div>
+      </div>
+
+      <button class="quick-btn" onclick="confirmRide()">⚡ CONFIRM RIDE NOW — log start time</button>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Payout Offered</div>
+        <div style="position:relative">
+          <span class="mono" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--orange);pointer-events:none">$</span>
+          <input type="number" id="payout" min="0" step="0.01" placeholder="0.00" inputmode="decimal"
+            style="width:100%;background:rgba(249,115,22,.07);border:2px solid var(--orange-border);border-radius:12px;padding:14px 14px 14px 30px;font-family:'Space Mono',monospace;font-size:22px;color:#fff;outline:none"
+            onfocus="this.style.borderColor='rgba(249,115,22,.8)'" onblur="this.style.borderColor='var(--orange-border)'"/>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Trip Distance</div>
+        <div style="display:flex;align-items:center;gap:0;background:rgba(255,255,255,.05);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.1)">
+          <button class="bump-btn" onclick="bumpMiles(-0.5)">−</button>
+          <input type="number" id="miles" min="0" step="0.5" placeholder="0.0" inputmode="decimal"
+            style="flex:1;background:transparent;border:none;text-align:center;font-family:'Space Mono',monospace;font-size:18px;color:#fff;outline:none;padding:12px 0"/>
+          <span style="color:var(--muted);font-size:12px;padding-right:4px">mi</span>
+          <button class="bump-btn" onclick="bumpMiles(0.5)">+</button>
+        </div>
+        <div id="drive-time-hint" style="font-size:11px;color:var(--muted);margin-top:6px;height:16px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:14px">
+        <div class="lbl">Pickup Stops</div>
+        <div style="display:flex;gap:8px" id="stop-btns">
+          <button class="stop-btn" onclick="setStops(0)" id="sb0" style="background:rgba(255,255,255,.06);color:var(--muted)">🚗</button>
+          <button class="stop-btn" onclick="setStops(1)" id="sb1" style="background:var(--orange);color:#fff">1</button>
+          <button class="stop-btn" onclick="setStops(2)" id="sb2" style="background:rgba(255,255,255,.06);color:var(--muted)">2</button>
+          <button class="stop-btn" onclick="setStops(3)" id="sb3" style="background:rgba(255,255,255,.06);color:var(--muted)">3</button>
+          <button class="stop-btn" onclick="setStops(4)" id="sb4" style="background:rgba(255,255,255,.06);color:var(--muted)">4+</button>
+        </div>
+        <div id="stop-hint" style="font-size:11px;color:var(--muted);margin-top:6px">Wait: 6 min (first stop)</div>
+      </div>
+
+      <div class="grid3" style="margin-bottom:12px">
+        <button class="scan-btn" onclick="document.getElementById('ocr-file').click()">📷 Scan</button>
+        <button class="scan-btn" onclick="pasteOffer()">📋 Paste</button>
+        <button class="scan-btn" id="voice-btn" onclick="startVoice()">🎙️ Voice</button>
+      </div>
+      <input type="file" id="ocr-file" accept="image/*" style="display:none" onchange="scanScreenshot(this.files[0])"/>
+      <div id="ocr-status" style="font-size:11px;color:var(--muted);margin:-4px 0 12px;height:15px;text-align:center"></div>
+
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <button class="analyze-btn" onclick="analyze()">ANALYZE OFFER</button>
+        <button class="clear-btn" id="clear-btn" onclick="clearForm()" style="display:none">✕</button>
+      </div>
+
+      <div id="result-card" style="display:none"></div>
+
+      <!-- Stacked-offer compare slot -->
+      <div id="compare-card" style="display:none;margin-top:12px"></div>
+    </div>
+
+    <!-- ── STATS TAB ── -->
+    <div id="pane-stats" style="display:none" class="fade">
+      <div class="seg" id="stats-seg">
+        <button onclick="setWindow('today')" id="sw-today" class="on">Today</button>
+        <button onclick="setWindow('week')" id="sw-week">7 days</button>
+        <button onclick="setWindow('all')" id="sw-all">All time</button>
+      </div>
+      <div id="stats-content"></div>
+    </div>
+
+    <!-- ── HISTORY TAB ── -->
+    <div id="pane-history" style="display:none" class="fade">
+      <div id="history-content"></div>
+    </div>
+
+    <!-- ── REF TAB ── -->
+    <div id="pane-ref" style="display:none" class="fade">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Min payout to clear <span id="ref-target">$20</span>/hr <span id="ref-net-note"></span>. Change stops below.</div>
+      <div style="display:flex;gap:8px;margin-bottom:16px" id="ref-stop-btns">
+        <button class="stop-btn" onclick="setStops(0);renderRef()" id="rsb0" style="background:rgba(255,255,255,.06);color:var(--muted)">🚗</button>
+        <button class="stop-btn" onclick="setStops(1);renderRef()" id="rsb1" style="background:var(--orange);color:#fff">1</button>
+        <button class="stop-btn" onclick="setStops(2);renderRef()" id="rsb2" style="background:rgba(255,255,255,.06);color:var(--muted)">2</button>
+        <button class="stop-btn" onclick="setStops(3);renderRef()" id="rsb3" style="background:rgba(255,255,255,.06);color:var(--muted)">3</button>
+        <button class="stop-btn" onclick="setStops(4);renderRef()" id="rsb4" style="background:rgba(255,255,255,.06);color:var(--muted)">4+</button>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden">
+        <div class="ref-header"><div>Miles</div><div>Drive</div><div>Cycle</div><div>Min $</div></div>
+        <div id="ref-table"></div>
+      </div>
+      <div id="ref-footer" style="font-size:10px;color:var(--faint);margin-top:8px"></div>
+    </div>
+
+    <!-- ── SETTINGS TAB ── -->
+    <div id="pane-settings" style="display:none" class="fade">
+
+      <button id="install-btn" class="pillbtn start-shift" style="display:none;margin-bottom:12px" onclick="doInstall()">⬇ Install app to home screen</button>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Target $/hr profit</div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <input type="range" id="s-target" min="12" max="50" step="0.5" value="20" oninput="updateTarget(this.value)"/>
+          <span class="mono" style="font-size:16px;color:var(--orange);min-width:44px" id="s-target-lbl">$20</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Daily earnings goal</div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <input type="range" id="s-goal" min="50" max="400" step="10" value="150" oninput="updateGoal(this.value)"/>
+          <span class="mono" style="font-size:16px;color:var(--green);min-width:48px" id="s-goal-lbl">$150</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Planned shift length (for forecast)</div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <input type="range" id="s-shifthrs" min="2" max="14" step="0.5" value="8" oninput="updateField('shiftGoalHours',this.value)"/>
+          <span class="mono" style="font-size:16px;color:var(--blue);min-width:48px" id="s-shifthrs-lbl">8h</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Grade on net profit (after fuel)</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--muted)">Subtract gas cost from $/hr</span>
+          <button id="net-toggle" class="mini-btn" onclick="toggleNet()">ON</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Speak the verdict (hands-free)</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--muted)">Read grade + $/hr aloud on Analyze</span>
+          <button id="speak-toggle" class="mini-btn" onclick="toggleSpeak()">OFF</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Driving mode</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--muted)">Bigger buttons &amp; verdict text</span>
+          <button id="driving-toggle" class="mini-btn" onclick="toggleDriving()">OFF</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Deadhead return (empty miles back)</div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <input type="range" id="s-return" min="0" max="1" step="0.05" value="0.4" oninput="updateField('returnFactor',this.value)"/>
+          <span class="mono" style="font-size:14px;color:var(--purple);min-width:46px" id="s-return-lbl">40%</span>
+        </div>
+        <div style="font-size:10px;color:var(--faint);margin-top:4px">Extra miles you drive back toward the hotspot, as a share of trip miles. Counts toward gas, time &amp; tax.</div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Tax set-aside</div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <input type="range" id="s-tax" min="0" max="0.45" step="0.01" value="0.25" oninput="updateField('taxPct',this.value)"/>
+          <span class="mono" style="font-size:14px;color:var(--yellow);min-width:46px" id="s-tax-lbl">25%</span>
+        </div>
+        <div style="font-size:10px;color:var(--faint);margin-top:4px">Share of net to stash for taxes. Shown as a jar in Stats.</div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Vehicle & fuel</div>
+        <div class="grid2">
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:4px">MPG</div>
+            <input class="num" type="number" id="s-mpg" inputmode="decimal" oninput="updateField('mpg',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:4px">Gas $/gal</div>
+            <input class="num" type="number" id="s-gas" step="0.01" inputmode="decimal" oninput="updateField('gasPrice',this.value)"/></div>
+        </div>
+        <div id="cpm-hint" style="font-size:10px;color:var(--faint);margin-top:8px"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Driving model</div>
+        <div class="grid2">
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:4px">Avg speed (mph)</div>
+            <input class="num" type="number" id="s-speed" inputmode="decimal" oninput="updateField('avgSpeed',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:4px">Idle buffer (min)</div>
+            <input class="num" type="number" id="s-idle" inputmode="decimal" oninput="updateField('idleMin',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:4px">First stop wait (min)</div>
+            <input class="num" type="number" id="s-w1" inputmode="decimal" oninput="updateField('firstWait',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:4px">Each extra stop (min)</div>
+            <input class="num" type="number" id="s-wx" inputmode="decimal" oninput="updateField('extraWait',this.value)"/></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Tax mileage deduction</div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <input type="range" id="s-irs" min="0.40" max="0.90" step="0.005" value="0.67" oninput="updateField('irsRate',this.value)"/>
+          <span class="mono" style="font-size:14px;color:var(--blue);min-width:54px" id="s-irs-lbl">$0.67</span>
+        </div>
+        <div style="font-size:10px;color:var(--faint);margin-top:4px">IRS standard mileage rate per mile (check current year)</div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="lbl">Data</div>
+        <div class="grid2" style="margin-top:4px">
+          <button class="ghost" onclick="exportCSV()">⬇ Export CSV</button>
+          <button class="ghost" onclick="exportJSON()">⬇ Backup JSON</button>
+        </div>
+        <button class="ghost" style="margin-top:8px" onclick="document.getElementById('import-file').click()">⬆ Restore from backup</button>
+        <input type="file" id="import-file" accept="application/json" style="display:none" onchange="importJSON(this.files[0])"/>
+      </div>
+
+      <div class="card">
+        <div class="lbl">How to use it fast (Pixel)</div>
+        <div style="font-size:12px;color:#9ca3af;line-height:1.55">
+          • <b>Confirm Ride Now</b> logs the start time the instant you accept — fill payout/miles later from History.<br>
+          • Installed (Share Target): screenshot the offer → <b>Share → DeliveryBuddy</b> → it scans payout &amp; miles.<br>
+          • Tap <b>📋 Paste</b> after copying offer text, or <b>🎙️ Voice</b> and say "nine fifty, four miles, two stops".<br>
+          • Turn on <b>Speak the verdict</b> + <b>Driving mode</b> for hands-light use.<br>
+          • <b>Start shift</b> on the Stats tab to track real $/hr, taxes &amp; expenses.<br>
+          • Everything saves on this device. Use <b>Backup JSON</b> before clearing.
+        </div>
+        <div id="build-note" style="font-size:10px;color:var(--faint);margin-top:10px"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom bar -->
+<div style="position:fixed;bottom:0;left:0;right:0;background:rgba(12,12,15,.95);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06);padding:10px 16px;display:flex;justify-content:center">
+  <span style="font-size:10px;color:var(--faint)" id="footer-note">Saved to device</span>
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────────────────
+let cfg = {
+  targetHourly:20, dailyGoal:150, platform:'uber', gradeOnNet:true,
+  avgSpeed:20, idleMin:0, firstWait:6, extraWait:4,
+  mpg:25, gasPrice:3.50, irsRate:0.67,
+  returnFactor:0.4, taxPct:0.25, shiftGoalHours:8,
+  speakVerdict:false, drivingMode:false,
+};
+let stops = 1;
+let history = [];          // ride entries
+let shifts = [];           // {id,start,end}
+let activeShift = null;    // {id,start}
+let expenses = [];         // {id,ts,kind,amount,note}
+let lastAnalysis = null;
+let compareA = null;       // first offer held for stacked compare
+let currentTab = 'calc';
+let histFilter = 'all';
+let statsWindow = 'today';
+let deferredInstall = null;
+
+const PLAT = {
+  uber:    {name:'Uber',     clr:'#ffffff'},
+  doordash:{name:'DoorDash', clr:'#ff3008'},
+  grubhub: {name:'Grubhub',  clr:'#f63440'},
+  other:   {name:'Other',    clr:'#9ca3af'},
+};
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const f2 = n => (Number(n)||0).toFixed(2);
+const fMin = m => m<1 ? Math.round(m*60)+'s' : (Math.round(m*10)/10)+'m';
+const cpm = () => (cfg.gasPrice>0 && cfg.mpg>0) ? cfg.gasPrice/cfg.mpg : 0;
+const payoutOf = r => Number(r.actualP!=null ? r.actualP : (r.p!=null ? r.p : 0))||0;
+const realMiles = m => (Number(m)||0)*(1+Math.max(0,cfg.returnFactor||0));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// IDs are interpolated into onclick="" handlers, so they must be a safe token only.
+// Untrusted sources (imported/restored backups, legacy migration) get sanitized here.
+const safeId = s => (String(s==null?'':s).replace(/[^a-z0-9_-]/gi,'').slice(0,40) || uid());
+function normalizeIds(){
+  if(Array.isArray(history)) history.forEach(r=>{ if(r&&typeof r==='object') r.id=safeId(r.id); });
+  if(Array.isArray(expenses)) expenses.forEach(x=>{ if(x&&typeof x==='object') x.id=safeId(x.id); });
+}
+// Numeric cfg fields can arrive non-numeric (null/string) from imported or legacy
+// backups; coerce at the data boundary so calc()/realMiles never see NaN.
+const CFG_NUM = {targetHourly:20, dailyGoal:150, avgSpeed:20, idleMin:0, firstWait:6, extraWait:4, mpg:25, gasPrice:3.50, irsRate:0.67, returnFactor:0.4, taxPct:0.25, shiftGoalHours:8};
+function coerceCfg(){
+  for(const k in CFG_NUM){ const n=Number(cfg[k]); cfg[k]=Number.isFinite(n)?n:CFG_NUM[k]; }
+}
+
+// ── STORAGE ──────────────────────────────────────────────────────────────────
+function save(){
+  try{
+    localStorage.setItem('db-cfg', JSON.stringify(cfg));
+    localStorage.setItem('db-history', JSON.stringify(history));
+    localStorage.setItem('db-shifts', JSON.stringify(shifts));
+    localStorage.setItem('db-activeShift', JSON.stringify(activeShift));
+    localStorage.setItem('db-expenses', JSON.stringify(expenses));
+  }catch(e){}
+}
+function load(){
+  try{
+    const c=localStorage.getItem('db-cfg'); if(c) cfg={...cfg,...JSON.parse(c)};
+    const h=localStorage.getItem('db-history'); if(h) history=JSON.parse(h);
+    const s=localStorage.getItem('db-shifts'); if(s) shifts=JSON.parse(s);
+    const a=localStorage.getItem('db-activeShift'); if(a) activeShift=JSON.parse(a);
+    const x=localStorage.getItem('db-expenses'); if(x) expenses=JSON.parse(x);
+    // one-time migration from Delivery Analyzer (da-*) then original (ua-*)
+    if(!c){ const oc=localStorage.getItem('da-cfg')||localStorage.getItem('ua-cfg'); if(oc) cfg={...cfg,...JSON.parse(oc)}; }
+    if(!h){ const oh=localStorage.getItem('da-history')||localStorage.getItem('ua-history'); if(oh) history=JSON.parse(oh); }
+    if(!s){ const os=localStorage.getItem('da-shifts'); if(os) shifts=JSON.parse(os); }
+  }catch(e){}
+  coerceCfg();
+}
+
+// ── MATH ─────────────────────────────────────────────────────────────────────
+function calc(payout, miles, s){
+  const MPM = cfg.avgSpeed>0 ? 60/cfg.avgSpeed : 3;
+  const totalMiles = realMiles(miles);          // include deadhead return
+  const driveMin = totalMiles * MPM;
+  const foodWait = s>0 ? cfg.firstWait + (s-1)*cfg.extraWait : 0;
+  const cycleMin = driveMin + foodWait + cfg.idleMin;
+  const cycleHr  = cycleMin/60;
+  const fuel     = totalMiles * cpm();
+  const net      = payout - fuel;
+  const grossEff = cycleHr>0 ? payout/cycleHr : 0;
+  const netEff   = cycleHr>0 ? net/cycleHr : 0;
+  const eff      = cfg.gradeOnNet ? netEff : grossEff;
+  const minPay   = (cfg.targetHourly>0?cfg.targetHourly:0)*cycleHr + (cfg.gradeOnNet ? fuel : 0);
+  return {driveMin, foodWait, cycleMin, cycleHr, fuel, net, totalMiles, grossEff, netEff, eff, minPay, surplus: payout-minPay};
+}
+function grade(eff){
+  const r = cfg.targetHourly>0 ? eff/cfg.targetHourly : (eff>0?2:0);
+  if(r>=1.3) return {label:'GREAT',      icon:'🔥', clr:'#4ade80', bg:'rgba(74,222,128,.10)', border:'rgba(74,222,128,.2)'};
+  if(r>=1.0) return {label:'WORTH IT',   icon:'✅', clr:'#a3e635', bg:'rgba(163,230,53,.09)', border:'rgba(163,230,53,.2)'};
+  if(r>=.85) return {label:'BORDERLINE', icon:'⚠️', clr:'#fbbf24', bg:'rgba(251,191,36,.09)', border:'rgba(251,191,36,.2)'};
+  return        {label:'SKIP IT',        icon:'❌', clr:'#f87171', bg:'rgba(248,113,113,.09)', border:'rgba(248,113,113,.2)'};
+}
+// Acceptance score 0–100: $/hr vs target (main), $/mi quality, fewer stops bonus
+function scoreOffer(r, payout, miles, s){
+  if(s==null) s=stops;
+  const ratio = cfg.targetHourly>0 ? r.eff/cfg.targetHourly : 0;
+  const effScore = Math.min(70, Math.max(0, ratio*55));
+  const perMile = miles>0 ? payout/miles : 0;
+  const pmScore = Math.min(20, Math.max(0, (perMile/2)*20));     // $2/mi = full 20
+  const stopScore = Math.max(0, 10 - s*2);
+  return Math.round(Math.min(100, Math.max(0, effScore+pmScore+stopScore)));
+}
+function scoreColor(sc){ return sc>=80?'#4ade80':sc>=60?'#a3e635':sc>=45?'#fbbf24':'#f87171'; }
+// rolling worked average $/hr (for beat-my-average)
+function workedAvgEff(){
+  const list=history.filter(r=>(r.status==='accepted'||r.status==='completed')&&r.eff!=null).map(r=>Number(r.eff)||0);
+  return list.length?list.reduce((a,b)=>a+b,0)/list.length:null;
+}
+
+// ── STOPS ────────────────────────────────────────────────────────────────────
+function setStops(n){
+  stops = n;
+  ['sb','rsb'].forEach(prefix=>{
+    [0,1,2,3,4].forEach(i=>{
+      const el=document.getElementById(prefix+i); if(!el) return;
+      if(i===n){ el.style.background='var(--orange)'; el.style.color='#fff'; }
+      else     { el.style.background='rgba(255,255,255,.06)'; el.style.color='var(--muted)'; }
+    });
+  });
+  const hint=document.getElementById('stop-hint');
+  if(hint){
+    if(n===0) hint.textContent='No food stop — direct trip';
+    else if(n===1) hint.textContent=`Wait: ${cfg.firstWait} min (first stop)`;
+    else hint.textContent=`Wait: ${cfg.firstWait+(n-1)*cfg.extraWait} min (${cfg.firstWait} + ${n-1}×${cfg.extraWait})`;
+  }
+  updateDriveHint();
+}
+
+// ── MILES ────────────────────────────────────────────────────────────────────
+function bumpMiles(d){
+  const inp=document.getElementById('miles');
+  const cur=parseFloat(inp.value)||0;
+  inp.value=Math.max(0, Math.round((cur+d)*10)/10);
+  updateDriveHint();
+}
+function updateDriveHint(){
+  const hint=document.getElementById('drive-time-hint'); if(!hint) return;
+  const m=parseFloat(document.getElementById('miles').value)||0;
+  if(m>0){
+    const tot=realMiles(m);
+    const MPM=cfg.avgSpeed>0?60/cfg.avgSpeed:3;
+    const driveMin=tot*MPM;
+    const wait=stops>0?cfg.firstWait+(stops-1)*cfg.extraWait:0;
+    const total=driveMin+wait+cfg.idleMin;
+    const fuel=tot*cpm();
+    const dh=cfg.returnFactor>0?` (incl. ${Math.round(cfg.returnFactor*100)}% return)`:'';
+    hint.textContent=`Drive ~${fMin(driveMin)}${dh}${wait>0?' + '+wait+'m wait':''} = ${fMin(total)} cycle · gas ~$${f2(fuel)}`;
+  } else hint.textContent='';
+}
+
+// ── ANALYZE ──────────────────────────────────────────────────────────────────
+function analyze(){
+  const p=parseFloat(document.getElementById('payout').value);
+  const m=parseFloat(document.getElementById('miles').value);
+  if(!p||!m){ toast('Enter payout and miles'); return; }
+  const r=calc(p,m,stops);
+  const g=grade(r.eff);
+  const sc=scoreOffer(r,p,m,stops);
+  lastAnalysis={p,m,stops,platform:cfg.platform,score:sc,...r,g};
+
+  const pct=Math.min((r.eff/(cfg.targetHourly*1.5))*100,100);
+  const tPct=(cfg.targetHourly/(cfg.targetHourly*1.5))*100;
+
+  const tiles=[
+    ['Net $/hr', `$${f2(r.netEff)}`],
+    ['Gross $/hr', `$${f2(r.grossEff)}`],
+    ['$/mile', `$${f2(p/m)}`],
+    ['Gas cost', `$${f2(r.fuel)}`],
+    ['Drive time', fMin(r.driveMin)],
+    r.foodWait>0 ? ['Food wait', `${r.foodWait}m`] : ['Trip type','Direct'],
+    ['Full cycle', fMin(r.cycleMin)],
+    ['Min needed', `$${f2(r.minPay)}`],
+  ];
+  const tileHTML=tiles.map(([k,v])=>`<div class="tile"><div class="tk">${k}</div><div class="tv">${v}</div></div>`).join('');
+
+  const surplusHTML = r.surplus>=0
+    ? `<div class="surplus" style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);color:#4ade80">$${f2(r.surplus)} above target on this offer ✓</div>`
+    : `<div class="surplus" style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);color:#f87171">Need $${f2(r.minPay)} to hit goal — short $${f2(-r.surplus)}</div>`;
+
+  // beat-my-average line
+  const avg=workedAvgEff();
+  let avgHTML='';
+  if(avg!=null){
+    const diff=r.eff-avg;
+    avgHTML=`<div style="font-size:11px;margin-top:8px;color:${diff>=0?'#4ade80':'#f87171'}">${diff>=0?'▲':'▼'} $${f2(Math.abs(diff))}/hr vs your worked average ($${f2(avg)}/hr)</div>`;
+  }
+
+  const scColor=scoreColor(sc);
+  const rc=document.getElementById('result-card');
+  rc.style.display='block';
+  rc.innerHTML=`
+    <div class="card fade" style="background:${g.bg};border-color:${g.border}">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
+        <div class="scorering" style="background:conic-gradient(${scColor} ${sc*3.6}deg, rgba(255,255,255,.08) 0);color:${scColor}">
+          <div style="width:50px;height:50px;border-radius:50%;background:#0c0c0f;display:flex;align-items:center;justify-content:center">${sc}</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:${g.clr};letter-spacing:.06em">${g.icon} ${g.label}</div>
+          <div style="display:flex;align-items:baseline;gap:6px">
+            <span class="mono" data-big style="font-size:40px;color:${g.clr};line-height:1.05">$${f2(r.eff)}</span>
+            <span style="font-size:13px;color:var(--muted)">/hr ${cfg.gradeOnNet?'net':'gross'}</span>
+          </div>
+        </div>
+      </div>
+      <div class="rate-track">
+        <div class="rate-fill" style="width:${pct}%;background:${g.clr}"></div>
+        <div class="rate-marker" style="left:${tPct}%"></div>
+      </div>
+      <div class="grid2" style="margin-top:16px">${tileHTML}</div>
+      ${surplusHTML}
+      ${avgHTML}
+      <div class="decide-row">
+        <button class="accept-btn"  onclick="decideRide('accepted')">✓ ACCEPT</button>
+        <button class="hold-btn"    onclick="holdForCompare()">⚖ COMPARE</button>
+        <button class="decline-btn" onclick="decideRide('declined')">✕ DECLINE</button>
+      </div>
+    </div>`;
+  document.getElementById('clear-btn').style.display='block';
+  speakVerdict(g,r,sc);
+}
+
+function clearForm(){
+  document.getElementById('payout').value='';
+  document.getElementById('miles').value='';
+  document.getElementById('result-card').style.display='none';
+  document.getElementById('result-card').innerHTML='';
+  document.getElementById('clear-btn').style.display='none';
+  document.getElementById('drive-time-hint').textContent='';
+  const st=document.getElementById('ocr-status'); if(st) st.textContent='';
+  lastAnalysis=null;
+}
+
+// ── STACKED-OFFER COMPARE ────────────────────────────────────────────────────
+function holdForCompare(){
+  if(!lastAnalysis){ toast('Analyze an offer first'); return; }
+  if(!compareA){
+    compareA={...lastAnalysis};
+    toast('Offer A held — analyze offer B, then Compare again');
+    clearForm();
+    return;
+  }
+  const A=compareA, B={...lastAnalysis};
+  const winner = A.eff>=B.eff ? 'A':'B';
+  const card=document.getElementById('compare-card');
+  const row=(label,o,win)=>`
+    <div style="flex:1;padding:12px;border-radius:12px;border:1px solid ${win?o.g.border:'var(--border)'};background:${win?o.g.bg:'rgba(255,255,255,.03)'}">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:.1em">OFFER ${label}${win?' · BEST':''}</div>
+      <div class="mono" style="font-size:24px;color:${o.g.clr}">$${f2(o.eff)}<span style="font-size:11px;color:var(--muted)">/hr</span></div>
+      <div style="font-size:11px;color:#9ca3af;margin-top:4px">$${f2(o.p)} · ${o.m} mi · ${o.stops} stop${o.stops!==1?'s':''}</div>
+      <div style="font-size:11px;color:#9ca3af">score ${o.score} · $${f2(o.p/o.m)}/mi</div>
+    </div>`;
+  card.style.display='block';
+  card.innerHTML=`<div class="card"><div class="lbl">Stacked compare — keep the winner</div>
+    <div style="display:flex;gap:10px">${row('A',A,winner==='A')}${row('B',B,winner==='B')}</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:10px;text-align:center">Offer ${winner} wins by $${f2(Math.abs(A.eff-B.eff))}/hr</div>
+    <button class="ghost" style="margin-top:10px" onclick="clearCompare()">Clear compare</button></div>`;
+  compareA=null;
+  toast('Compared A vs B');
+}
+function clearCompare(){ compareA=null; const c=document.getElementById('compare-card'); c.style.display='none'; c.innerHTML=''; }
+
+// ── DECISIONS ────────────────────────────────────────────────────────────────
+function decideRide(status){
+  if(!lastAnalysis){ toast('Analyze an offer first'); return; }
+  const now=Date.now();
+  history.unshift({id:uid(), ...lastAnalysis, status, ts:now,
+    startedAt: status==='accepted'?now:null, completedAt:null, actualP:null});
+  if(history.length>500) history.pop();
+  save(); lastAnalysis=null; clearForm(); updateShiftBanner();
+  toast(status==='accepted'?'Accepted — start time logged ✓':'Declined — logged');
+}
+function confirmRide(){
+  const now=Date.now();
+  const p=parseFloat(document.getElementById('payout').value);
+  const m=parseFloat(document.getElementById('miles').value);
+  let extra;
+  if(p>0&&m>0){ const r=calc(p,m,stops); extra={p,m,stops,score:scoreOffer(r,p,m,stops),...r,g:grade(r.eff)}; }
+  else { extra={p:(p>0?p:null), m:(m>0?m:null), stops, g:null}; }
+  history.unshift({id:uid(), platform:cfg.platform, status:'accepted',
+    ts:now, startedAt:now, completedAt:null, actualP:null, ...extra});
+  if(history.length>500) history.pop();
+  save(); clearForm(); updateShiftBanner();
+  toast('Ride confirmed — start time logged ✓');
+}
+function markCompleted(id){
+  const e=history.find(x=>x.id===id); if(!e) return;
+  e.status='completed'; e.completedAt=Date.now(); if(!e.startedAt) e.startedAt=e.ts;
+  save(); renderHistory(); updateShiftBanner();
+}
+function addDetails(id){
+  const e=history.find(x=>x.id===id); if(!e) return;
+  const p=parseFloat(prompt('Payout offered ($):', e.p||''));
+  const m=parseFloat(prompt('Trip distance (miles):', e.m||''));
+  if(!(p>0)||!(m>0)) return;
+  const r=calc(p,m,e.stops||1);
+  Object.assign(e,{p,m,score:scoreOffer(r,p,m,e.stops||1),...r,g:grade(r.eff)});
+  save(); renderHistory();
+}
+function setActual(id){
+  const e=history.find(x=>x.id===id); if(!e) return;
+  const v=parseFloat(prompt('Final payout after tip ($):', e.actualP!=null?e.actualP:(e.p||'')));
+  if(!(v>=0)) return;
+  e.actualP=v; save(); renderHistory();
+}
+function delEntry(id){ history=history.filter(x=>x.id!==id); save(); renderHistory(); }
+
+// ── PLATFORM ─────────────────────────────────────────────────────────────────
+function setPlatform(p){
+  cfg.platform=p; save();
+  Object.keys(PLAT).forEach(k=>{
+    const el=document.getElementById('plat-'+k); if(!el) return;
+    if(k===p){ el.classList.add('on'); el.style.background=PLAT[k].clr==='#ffffff'?'#374151':PLAT[k].clr; el.style.borderColor='transparent'; el.style.color='#fff'; }
+    else { el.classList.remove('on'); el.style.background='rgba(255,255,255,.05)'; el.style.borderColor='var(--border)'; el.style.color='var(--muted)'; }
+  });
+}
+// ── SHIFTS ───────────────────────────────────────────────────────────────────
+function startShift(){ activeShift={id:uid(), start:Date.now()}; save(); updateShiftBanner(); renderStats(); toast('Shift started'); }
+function endShift(){
+  if(!activeShift) return;
+  shifts.unshift({...activeShift, end:Date.now()});
+  activeShift=null; save(); updateShiftBanner(); renderStats(); toast('Shift ended');
+}
+function shiftHours(start){
+  let h=0;
+  shifts.forEach(s=>{ if(s.end && s.start>=start) h+=(s.end-s.start)/3600000; });
+  return h;
+}
+function updateShiftBanner(){
+  const b=document.getElementById('shift-banner');
+  if(activeShift){
+    b.style.display='flex';
+    const mins=(Date.now()-activeShift.start)/60000;
+    document.getElementById('shift-elapsed').textContent=fMin(mins);
+    const start=todayStart();
+    const worked=history.filter(r=>(r.status==='accepted'||r.status==='completed')&&(r.startedAt||r.ts)>=Math.min(start,activeShift.start));
+    const net=worked.reduce((a,r)=>a+(payoutOf(r)-realMiles(r.m)*cpm()),0);
+    document.getElementById('shift-net').textContent='Net $'+f2(net);
+  } else b.style.display='none';
+}
+
+// ── TIME WINDOWS ─────────────────────────────────────────────────────────────
+function todayStart(){ const d=new Date(); d.setHours(0,0,0,0); return d.getTime(); }
+function winStart(w){ if(w==='today') return todayStart(); if(w==='week') return Date.now()-7*86400000; return 0; }
+function setWindow(w){
+  statsWindow=w;
+  ['today','week','all'].forEach(k=>document.getElementById('sw-'+k).classList.toggle('on',k===w));
+  renderStats();
+}
+
+// ── EXPENSES ─────────────────────────────────────────────────────────────────
+function sumExpenses(start){ return expenses.filter(x=>x.ts>=start).reduce((a,x)=>a+(Number(x.amount)||0),0); }
+function addExpense(){
+  const kind=prompt('Expense type (gas, tolls, supplies, fees, other):','gas'); if(kind===null) return;
+  const amount=parseFloat(prompt('Amount ($):','')); if(!(amount>0)) return;
+  expenses.unshift({id:uid(), ts:Date.now(), kind:(kind||'other').trim().toLowerCase(), amount});
+  if(expenses.length>500) expenses.pop();
+  save(); renderStats(); toast('Expense logged');
+}
+function delExpense(id){ expenses=expenses.filter(x=>x.id!==id); save(); renderStats(); }
+
+// ── STATS DASHBOARD ──────────────────────────────────────────────────────────
+function renderStats(){
+  const el=document.getElementById('stats-content');
+  const start=winStart(statsWindow);
+  const worked=history.filter(r=>(r.status==='accepted'||r.status==='completed')&&(r.startedAt||r.ts)>=start);
+  const declinedArr=history.filter(r=>r.status==='declined'&&r.ts>=start);
+  const declined=declinedArr.length;
+  const earned=worked.reduce((a,r)=>a+payoutOf(r),0);
+  const miles=worked.reduce((a,r)=>a+realMiles(r.m),0);
+  const fuel=miles*cpm();
+  const net=earned-fuel;
+  const exp=sumExpenses(start);
+  const takeHome=net-exp;
+  const taxJar=Math.max(0, takeHome*Math.max(0,cfg.taxPct||0));
+  let onlineHr=shiftHours(start)+(activeShift?(Date.now()-activeShift.start)/3600000:0);
+  let hrSource='shifts';
+  if(onlineHr<=0.01){
+    onlineHr=worked.filter(r=>r.completedAt&&r.startedAt).reduce((a,r)=>a+(r.completedAt-r.startedAt)/3600000,0);
+    hrSource='trips';
+  }
+  const realHr=onlineHr>0?net/onlineHr:null;
+  const decisions=worked.length+declined;
+  const acceptRate=decisions?Math.round(worked.length/decisions*100):null;
+  const irs=miles*cfg.irsRate;
+
+  // shift control
+  let shiftCtl = activeShift
+    ? `<button class="pillbtn end-shift" onclick="endShift()">■ End shift · ${fMin((Date.now()-activeShift.start)/60000)}</button>`
+    : `<button class="pillbtn start-shift" onclick="startShift()">● Start shift</button>`;
+
+  const goalPct=Math.min(net/Math.max(cfg.dailyGoal,1)*100,100);
+
+  // forecast (today): project to planned shift length at current pace
+  let forecastHTML='';
+  if(statsWindow==='today' && realHr!=null && onlineHr>0.1){
+    const proj=realHr*Math.max(onlineHr,cfg.shiftGoalHours);
+    const remainHr=Math.max(0,cfg.shiftGoalHours-onlineHr);
+    forecastHTML=`<div style="font-size:11px;color:var(--blue);margin-top:6px">On pace for ~$${f2(proj)} net by ${cfg.shiftGoalHours}h${remainHr>0?` (${fMin(remainHr*60)} to go)`:''}</div>`;
+  }
+
+  // decline-regret: declined offers that beat your worked average
+  const avg=workedAvgEff();
+  let regretHTML='';
+  if(avg!=null){
+    const regret=declinedArr.filter(r=>r.eff!=null&&r.eff>avg);
+    if(regret.length) regretHTML=`<div class="card" style="margin-bottom:12px;background:rgba(192,132,252,.07);border-color:rgba(192,132,252,.2)">
+      <div class="lbl" style="color:var(--purple)">Decline check</div>
+      <div style="font-size:12px;color:#cbd5e1">You declined <b>${regret.length}</b> offer${regret.length>1?'s':''} that beat your $${f2(avg)}/hr average. Best skipped: $${f2(Math.max(...regret.map(r=>r.eff)))}/hr.</div></div>`;
+  }
+
+  // per-platform
+  const byPlat={};
+  worked.forEach(r=>{ const k=r.platform||'other'; (byPlat[k]=byPlat[k]||{n:0,net:0}); byPlat[k].n++; byPlat[k].net+=payoutOf(r)-realMiles(r.m)*cpm(); });
+  let platRows=Object.keys(byPlat).map(k=>{
+    const P=PLAT[k]||PLAT.other;
+    return `<div style="display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid rgba(255,255,255,.05)">
+      <span style="font-size:12px;color:${P.clr==='#ffffff'?'#cbd5e1':P.clr};font-weight:700">${P.name}</span>
+      <span class="mono" style="font-size:12px;color:#cbd5e1">${byPlat[k].n} · $${f2(byPlat[k].net)} net</span></div>`;
+  }).join('');
+
+  // expenses list
+  const expList=expenses.filter(x=>x.ts>=start);
+  let expRows=expList.slice(0,8).map(x=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px solid rgba(255,255,255,.05)">
+      <span style="font-size:12px;color:#cbd5e1;text-transform:capitalize">${esc(x.kind)}</span>
+      <span style="display:flex;align-items:center;gap:8px"><span class="mono" style="font-size:12px;color:#f87171">-$${f2(x.amount)}</span>
+      <button class="mini-btn" onclick="delExpense('${x.id}')">✕</button></span></div>`).join('');
+
+  el.innerHTML=`
+    <div style="margin-bottom:12px">${shiftCtl}</div>
+    <div class="card" style="margin-bottom:12px">
+      <div class="lbl">Net profit ${statsWindow==='today'?'today':statsWindow==='week'?'(7 days)':'(all time)'}</div>
+      <div class="big-stat" style="color:var(--green)">$${f2(net)}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px">$${f2(earned)} earned − $${f2(fuel)} gas · ${worked.length} deliveries</div>
+      ${exp>0?`<div style="font-size:11px;color:#f87171;margin-top:3px">− $${f2(exp)} expenses = <b style="color:#e5e7eb">$${f2(takeHome)} take-home</b></div>`:''}
+      ${forecastHTML}
+      ${statsWindow==='today'?`<div class="goal-track"><div class="goal-fill" style="width:${goalPct}%"></div></div>
+        <div style="font-size:10px;color:var(--faint);margin-top:5px">${Math.round(goalPct)}% of $${cfg.dailyGoal} goal</div>`:''}
+    </div>
+    <div class="grid2" style="margin-bottom:12px">
+      <div class="tile"><div class="tk">Real $/hr ${onlineHr>0?'('+hrSource+')':''}</div><div class="tv" style="font-size:16px;color:${realHr!=null?(realHr>=cfg.targetHourly?'#4ade80':'#fbbf24'):'#6b7280'}">${realHr!=null?'$'+f2(realHr):'—'}</div></div>
+      <div class="tile"><div class="tk">Online time</div><div class="tv" style="font-size:16px">${onlineHr>0?fMin(onlineHr*60):'—'}</div></div>
+      <div class="tile"><div class="tk">Accept rate</div><div class="tv" style="font-size:16px">${acceptRate!=null?acceptRate+'%':'—'}</div></div>
+      <div class="tile"><div class="tk">Avg / delivery</div><div class="tv" style="font-size:16px">${worked.length?'$'+f2(earned/worked.length):'—'}</div></div>
+      <div class="tile"><div class="tk">Miles (incl. return)</div><div class="tv" style="font-size:16px">${f2(miles)} mi</div></div>
+      <div class="tile"><div class="tk">Tax deduction est.</div><div class="tv" style="font-size:16px;color:var(--blue)">$${f2(irs)}</div></div>
+    </div>
+    <div class="card" style="margin-bottom:12px;background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div class="lbl" style="color:var(--yellow)">🫙 Tax set-aside jar (${Math.round((cfg.taxPct||0)*100)}%)</div>
+          <div class="mono" style="font-size:22px;color:var(--yellow)">$${f2(taxJar)}</div></div>
+        <div style="font-size:10px;color:var(--faint);text-align:right;max-width:140px">Stash this from take-home so taxes don't sting</div>
+      </div>
+    </div>
+    ${regretHTML}
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <div class="lbl" style="margin-bottom:0">Expenses (this window)</div>
+        <button class="mini-btn" onclick="addExpense()">+ Add</button>
+      </div>
+      ${expList.length?expRows:'<div style="font-size:11px;color:var(--faint);padding-top:6px">None logged — tolls, car wash, supplies…</div>'}
+    </div>
+    ${platRows?`<div class="card"><div class="lbl">By platform</div>${platRows}</div>`:''}
+    ${worked.length===0&&expList.length===0?'<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">No activity in this window yet</div>':''}`;
+}
+
+// ── HISTORY ──────────────────────────────────────────────────────────────────
+function fmtTime(ts){ return new Date(ts).toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
+function statusBadge(s){
+  if(s==='accepted') return '<span class="badge b-accepted">Accepted</span>';
+  if(s==='declined') return '<span class="badge b-declined">Declined</span>';
+  if(s==='completed')return '<span class="badge b-completed">Completed</span>';
+  return '';
+}
+function renderHistory(){
+  const el=document.getElementById('history-content');
+  const filters=[['all','All'],['accepted','Accepted'],['completed','Done'],['declined','Declined']];
+  let bar='<div class="seg">'+filters.map(([k,l])=>`<button class="${histFilter===k?'on':''}" onclick="setFilter('${k}')">${l}</button>`).join('')+'</div>';
+  if(history.length===0){ el.innerHTML=bar+'<div style="text-align:center;padding:40px 0;color:var(--muted);font-size:13px">No rides logged yet</div>'; return; }
+  const rows=history.filter(r=>histFilter==='all'?true:r.status===histFilter);
+  const worked=history.filter(r=>r.status==='accepted'||r.status==='completed');
+  const earned=worked.reduce((a,r)=>a+payoutOf(r),0);
+  const effList=worked.filter(r=>r.eff!=null).map(r=>Number(r.eff)||0);
+  const avgEff=effList.length?effList.reduce((a,b)=>a+b,0)/effList.length:null;
+  const declined=history.filter(r=>r.status==='declined').length;
+  const ag=avgEff!=null?grade(avgEff):{clr:'#9ca3af',bg:'var(--card)',border:'var(--border)'};
+
+  let html=bar+`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:12px;color:var(--muted)">${worked.length} worked · ${declined} declined</div>
+      <button onclick="clearHistory()" style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);border-radius:7px;padding:5px 10px;color:#f87171;font-size:11px;font-family:inherit">Clear All</button>
+    </div>
+    <div class="card" style="margin-bottom:12px;background:${ag.bg};border-color:${ag.border}">
+      <div class="lbl">Worked average ${cfg.gradeOnNet?'(net)':'(gross)'}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="mono" style="font-size:26px;color:${ag.clr}">${avgEff!=null?'$'+f2(avgEff)+'/hr':'—'}</span>
+        <div style="text-align:right"><div style="font-size:11px;color:var(--muted)">Total earned</div>
+          <span class="mono" style="font-size:15px;color:#e5e7eb">$${f2(earned)}</span></div>
+      </div>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden">`;
+  rows.forEach((r,i)=>{
+    const dot=r.g?r.g.clr:'var(--faint)';
+    const P=PLAT[r.platform]||PLAT.other;
+    const trip=(r.m!=null?esc(r.m)+' mi':'— mi')+' · '+(r.stops>0?esc(r.stops)+' stop'+(r.stops>1?'s':''):'no stops');
+    const startLine=r.startedAt?'Started '+fmtTime(r.startedAt):fmtTime(r.ts);
+    let actual='';
+    if(r.status==='completed'&&r.startedAt&&r.completedAt&&payoutOf(r)>0){
+      const hrs=(r.completedAt-r.startedAt)/3600000;
+      if(hrs>0.01) actual=`<div class="mono" style="font-size:11px;color:var(--blue)">act $${f2(payoutOf(r)/hrs)}/hr · ${fMin(hrs*60)}</div>`;
+    }
+    let actions='';
+    if(r.status==='accepted') actions+=`<button class="mini-btn" onclick="markCompleted('${r.id}')">Mark done</button>`;
+    if((r.status==='accepted'||r.status==='completed')&&(r.p==null||r.m==null)) actions+=`<button class="mini-btn" onclick="addDetails('${r.id}')">+ $/mi</button>`;
+    if(r.status==='accepted'||r.status==='completed') actions+=`<button class="mini-btn" onclick="setActual('${r.id}')">Tip</button>`;
+    actions+=`<button class="mini-btn" onclick="delEntry('${r.id}')">✕</button>`;
+    const payShow = payoutOf(r)>0 ? '$'+f2(payoutOf(r)) : '—';
+    const tipMark = (r.actualP!=null&&r.p!=null&&r.actualP!==r.p) ? ' *' : '';
+    const scBadge = r.score!=null?`<span class="badge" style="background:rgba(255,255,255,.06);color:${scoreColor(r.score)}">${esc(r.score)}</span>`:'';
+    html+=`<div style="padding:11px 14px;${i<rows.length-1?'border-bottom:1px solid rgba(255,255,255,.05)':''}">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:8px;height:8px;border-radius:50%;background:${dot};flex-shrink:0"></div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span class="badge b-plat" style="color:${P.clr==='#ffffff'?'#cbd5e1':P.clr}">${P.name}</span>${statusBadge(r.status)}${scBadge}
+          </div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:3px">${trip}</div>
+          <div style="font-size:10px;color:var(--faint)">${startLine}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="mono" style="font-size:13px;color:#e5e7eb">${payShow}${tipMark}</div>
+          <div class="mono" style="font-size:12px;color:${dot}">${r.eff!=null?'$'+f2(r.eff)+'/hr':''}</div>${actual}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;justify-content:flex-end;margin-top:8px">${actions}</div>
+    </div>`;
+  });
+  if(rows.length===0) html+='<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:12px">None in this filter</div>';
+  html+='</div>';
+  el.innerHTML=html;
+}
+function setFilter(f){ histFilter=f; renderHistory(); }
+function clearHistory(){ if(!confirm('Clear all ride history? (Back up first if you need it)')) return; history=[]; save(); renderHistory(); }
+
+// ── REF TABLE ────────────────────────────────────────────────────────────────
+function renderRef(){
+  const dists=[2,3,4,5,5.5,6,7,8,10,12,15];
+  let html='';
+  dists.forEach((d,i)=>{
+    const r=calc(0,d,stops);
+    html+=`<div class="ref-row ${i%2===1?'alt':''}">
+      <div style="color:#e5e7eb">${d}</div>
+      <div style="color:#9ca3af">${fMin(r.driveMin)}</div>
+      <div style="color:#9ca3af">${fMin(r.cycleMin)}</div>
+      <div style="color:var(--orange)">$${f2(r.minPay)}</div></div>`;
+  });
+  document.getElementById('ref-table').innerHTML=html;
+  document.getElementById('ref-target').textContent='$'+cfg.targetHourly;
+  document.getElementById('ref-net-note').textContent=cfg.gradeOnNet?'(incl. gas)':'';
+  const wait=stops>0?cfg.firstWait+(stops-1)*cfg.extraWait:0;
+  document.getElementById('ref-footer').textContent=(stops>0?`Food wait: ${wait} min`:'No food stop')+(cfg.idleMin>0?` + ${cfg.idleMin} min idle`:'')+(cfg.returnFactor>0?` · +${Math.round(cfg.returnFactor*100)}% return`:'')+` · ${cfg.avgSpeed} mph`;
+}
+
+// ── OCR (screenshot scan) ────────────────────────────────────────────────────
+let tessReady=null;
+function loadTesseract(){
+  if(tessReady) return tessReady;
+  tessReady=new Promise((res,rej)=>{
+    if(window.Tesseract) return res();
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    s.onload=()=>res(); s.onerror=()=>rej(new Error('load failed'));
+    document.head.appendChild(s);
+  });
+  return tessReady;
+}
+async function scanScreenshot(file){
+  if(!file) return;
+  const st=document.getElementById('ocr-status');
+  st.textContent='Loading scanner…';
+  try{
+    await loadTesseract();
+    st.textContent='Reading offer…';
+    const {data:{text}}=await Tesseract.recognize(file,'eng');
+    applyParsed(parseOffer(text),st);
+  }catch(e){ st.textContent='Scan needs internet the first time — enter manually'; }
+  const f=document.getElementById('ocr-file'); if(f) f.value='';
+}
+function applyParsed(parsed,st){
+  if(parsed.payout!=null) document.getElementById('payout').value=parsed.payout;
+  if(parsed.miles!=null) document.getElementById('miles').value=parsed.miles;
+  if(parsed.stops!=null) setStops(parsed.stops);
+  updateDriveHint();
+  const got=[]; if(parsed.payout!=null)got.push('$'+parsed.payout); if(parsed.miles!=null)got.push(parsed.miles+' mi');
+  if(st) st.textContent=got.length?('Found '+got.join(' · ')+' — check & analyze'):'No payout/miles found — enter manually';
+  if(parsed.payout!=null&&parsed.miles!=null) analyze();
+}
+function parseOffer(text){
+  const t=text.replace(/[, ]/g,m=>m===','?'':' ');
+  let payout=null,miles=null,stops=null;
+  const money=[...t.matchAll(/\$\s?(\d{1,3}(?:\.\d{1,2})?)/g)].map(m=>parseFloat(m[1])).filter(n=>n>0&&n<500);
+  if(money.length) payout=Math.max(...money);
+  const mi=t.match(/(\d{1,3}(?:\.\d{1,2})?)\s*(?:mi\b|miles?)/i);
+  if(mi) miles=parseFloat(mi[1]);
+  const sc=t.match(/(\d)\s*(?:stops?|orders?|deliver)/i);
+  if(sc){ const n=parseInt(sc[1]); if(n>=1&&n<=4) stops=n; }
+  return {payout,miles,stops};
+}
+// ── PASTE (clipboard capture) ────────────────────────────────────────────────
+async function pasteOffer(){
+  const st=document.getElementById('ocr-status');
+  try{
+    if(!navigator.clipboard||!navigator.clipboard.readText){ st.textContent='Clipboard not available — long-press to paste manually'; return; }
+    const text=await navigator.clipboard.readText();
+    if(!text){ st.textContent='Clipboard empty'; return; }
+    applyParsed(parseOffer(text),st);
+  }catch(e){ st.textContent='Allow clipboard access, or type it in'; }
+}
+
+// ── WEATHER-AWARE TARGET (Open-Meteo, free, no key) ──────────────────────────
+async function checkWeather(){
+  const out=document.getElementById('weather-text');
+  out.textContent='Locating…';
+  if(!navigator.geolocation){ out.textContent='No location on this device'; return; }
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    try{
+      const {latitude:la,longitude:lo}=pos.coords;
+      const u=`https://api.open-meteo.com/v1/forecast?latitude=${la.toFixed(3)}&longitude=${lo.toFixed(3)}&current=temperature_2m,precipitation,weather_code&temperature_unit=fahrenheit`;
+      const r=await fetch(u); const d=await r.json(); const c=d.current||{};
+      const temp=Math.round(c.temperature_2m), precip=c.precipitation||0, code=c.weather_code||0;
+      let busy=precip>0.1||code>=51||temp<=34||temp>=95;
+      let icon=precip>0.1?'🌧️':temp<=34?'❄️':temp>=95?'🥵':code>=51?'🌦️':'☀️';
+      const bump=busy?Math.round(cfg.targetHourly*0.1):0;
+      out.innerHTML=`${icon} ${temp}°F${precip>0.1?', rain':''} — ${busy?`busy odds up, aim +$${bump}/hr`:'normal demand'}`;
+      if(busy) toast(`Rough conditions: more orders likely — hold out for higher offers (+$${bump}/hr)`);
+    }catch(e){ out.textContent='Weather unavailable (needs internet)'; }
+  }, ()=>{ out.textContent='Location blocked — allow it to check'; }, {timeout:8000, maximumAge:600000});
+}
+
+// ── VOICE ────────────────────────────────────────────────────────────────────
+function startVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ toast('Voice not supported on this browser'); return; }
+  const btn=document.getElementById('voice-btn');
+  const rec=new SR(); rec.lang='en-US'; rec.interimResults=false; rec.maxAlternatives=1;
+  btn.classList.add('rec'); btn.textContent='🎙️ …';
+  rec.onresult=e=>{
+    const t=e.results[0][0].transcript||'';
+    const p=parseVoice(t);
+    if(p.payout!=null) document.getElementById('payout').value=p.payout;
+    if(p.miles!=null) document.getElementById('miles').value=p.miles;
+    if(p.stops!=null) setStops(p.stops);
+    updateDriveHint();
+    toast('Heard: "'+t+'"');
+    if(p.payout!=null&&p.miles!=null) analyze();
+  };
+  rec.onerror=()=>toast('Voice error — try again');
+  rec.onend=()=>{ btn.classList.remove('rec'); btn.textContent='🎙️ Voice'; };
+  try{ rec.start(); }catch(e){ btn.classList.remove('rec'); btn.textContent='🎙️ Voice'; }
+}
+function parseVoice(t){
+  t=t.toLowerCase();
+  let payout=null,miles=null,stops=null;
+  const mi=t.match(/(\d+(?:\.\d+)?)\s*(?:miles?|mi)\b/); if(mi) miles=parseFloat(mi[1]);
+  const sc=t.match(/(\d+)\s*stops?\b/); if(sc) stops=Math.min(4,Math.max(0,parseInt(sc[1])));
+  let dm=t.match(/\$\s*(\d+(?:\.\d{1,2})?)/)
+       || t.match(/(\d+(?:\.\d{1,2})?)\s*(?:dollars?|bucks?)/)
+       || t.match(/(?:pay(?:out)?|for|offer(?:ing|ed)?)\s*\$?\s*(\d+(?:\.\d{1,2})?)/);
+  if(dm) payout=parseFloat(dm[1]);
+  if(payout==null){
+    for(const m of t.matchAll(/(\d+(?:\.\d{1,2})?)/g)){
+      const after=t.slice(m.index+m[0].length, m.index+m[0].length+8);
+      if(/^\s*(?:miles?|mi|stops?)\b/.test(after)) continue;
+      payout=parseFloat(m[1]); break;
+    }
+  }
+  return {payout,miles,stops};
+}
+
+// ── SPOKEN VERDICT (TTS) ─────────────────────────────────────────────────────
+function speakVerdict(g,r,sc){
+  if(!cfg.speakVerdict || !('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(`${g.label}. ${Math.round(r.eff)} dollars an hour. Score ${sc}.`);
+    u.rate=1.05; u.pitch=1;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+// ── SETTINGS ─────────────────────────────────────────────────────────────────
+function updateTarget(v){ cfg.targetHourly=parseFloat(v); document.getElementById('s-target-lbl').textContent='$'+v; document.getElementById('top-target').textContent='$'+v+'/hr'; save(); updateDriveHint(); }
+function updateGoal(v){ cfg.dailyGoal=parseFloat(v); document.getElementById('s-goal-lbl').textContent='$'+v; save(); }
+function toggleNet(){ cfg.gradeOnNet=!cfg.gradeOnNet; document.getElementById('net-toggle').textContent=cfg.gradeOnNet?'ON':'OFF'; save(); updateDriveHint(); }
+function toggleSpeak(){ cfg.speakVerdict=!cfg.speakVerdict; document.getElementById('speak-toggle').textContent=cfg.speakVerdict?'ON':'OFF'; save(); if(cfg.speakVerdict) toast('Verdict will be spoken on Analyze'); }
+function toggleDriving(){ cfg.drivingMode=!cfg.drivingMode; document.getElementById('driving-toggle').textContent=cfg.drivingMode?'ON':'OFF'; document.body.classList.toggle('driving',cfg.drivingMode); save(); }
+function updateField(key,v){
+  const n=parseFloat(v); if(isNaN(n)) return;
+  cfg[key]=n; save();
+  if(key==='irsRate') document.getElementById('s-irs-lbl').textContent='$'+n.toFixed(3).replace(/0$/,'');
+  if(key==='returnFactor') document.getElementById('s-return-lbl').textContent=Math.round(n*100)+'%';
+  if(key==='taxPct') document.getElementById('s-tax-lbl').textContent=Math.round(n*100)+'%';
+  if(key==='shiftGoalHours') document.getElementById('s-shifthrs-lbl').textContent=n+'h';
+  refreshCpmHint(); updateDriveHint();
+}
+function refreshCpmHint(){ const el=document.getElementById('cpm-hint'); if(el) el.textContent=`Fuel cost ≈ $${f2(cpm())}/mile · with ${Math.round((cfg.returnFactor||0)*100)}% return ≈ $${f2(cpm()*(1+(cfg.returnFactor||0)))}/offer-mile`; }
+
+// ── INSTALL ──────────────────────────────────────────────────────────────────
+window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); deferredInstall=e; const b=document.getElementById('install-btn'); if(b) b.style.display='block'; });
+async function doInstall(){ if(!deferredInstall){ toast('Use browser menu → Install app'); return; } deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall=null; document.getElementById('install-btn').style.display='none'; }
+
+// ── EXPORT / IMPORT ──────────────────────────────────────────────────────────
+function download(name,text,type){ const b=new Blob([text],{type}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),2000); }
+function exportCSV(){
+  const head=['started','platform','status','payout_offered','final_payout','miles','stops','score','est_per_hr','net_per_hr','completed','elapsed_min'];
+  const rows=[head];
+  history.forEach(r=>{
+    const elapsed=(r.completedAt&&r.startedAt)?Math.round((r.completedAt-r.startedAt)/60000):'';
+    rows.push([
+      r.startedAt?new Date(r.startedAt).toISOString():'', r.platform||'', r.status||'',
+      r.p!=null?r.p:'', r.actualP!=null?r.actualP:'', r.m!=null?r.m:'', r.stops!=null?r.stops:'',
+      r.score!=null?r.score:'', r.eff!=null?r.eff.toFixed(2):'', r.netEff!=null?r.netEff.toFixed(2):'',
+      r.completedAt?new Date(r.completedAt).toISOString():'', elapsed
+    ]);
+  });
+  const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+  download('deliverybuddy-history.csv',csv,'text/csv');
+  toast('CSV exported');
+}
+function exportJSON(){ download('deliverybuddy-backup.json',JSON.stringify({cfg,history,shifts,expenses},null,2),'application/json'); toast('Backup saved'); }
+function importJSON(file){
+  if(!file) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const d=JSON.parse(r.result);
+    if(d.cfg && typeof d.cfg==='object' && !Array.isArray(d.cfg)) cfg={...cfg,...d.cfg}; if(Array.isArray(d.history)) history=d.history; if(Array.isArray(d.shifts)) shifts=d.shifts; if(Array.isArray(d.expenses)) expenses=d.expenses;
+    normalizeIds(); coerceCfg();
+    save(); initSettingsUI(); toast('Backup restored'); switchTab('history');
+  }catch(e){ toast('Invalid backup file'); } };
+  r.readAsText(file);
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+let toastTimer=null;
+function toast(msg){
+  let t=document.getElementById('toast');
+  if(!t){ t=document.createElement('div'); t.id='toast';
+    t.style.cssText='position:fixed;left:50%;bottom:64px;transform:translateX(-50%);background:rgba(20,20,24,.96);border:1px solid var(--border);color:#f5f5f5;padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.5);transition:opacity .2s;max-width:90%;text-align:center';
+    document.body.appendChild(t); }
+  t.textContent=msg; t.style.opacity='1';
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>{ t.style.opacity='0'; },2400);
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(id){
+  ['calc','stats','history','ref','settings'].forEach(t=>{
+    document.getElementById('pane-'+t).style.display=t===id?'block':'none';
+    const btn=document.getElementById('tab-'+t); if(btn) btn.className='tab '+(t===id?'active':'inactive');
+  });
+  currentTab=id;
+  if(id==='stats') renderStats();
+  if(id==='history') renderHistory();
+  if(id==='ref') renderRef();
+}
+
+// ── SHARE TARGET (receive screenshot) ────────────────────────────────────────
+async function checkSharedImage(){
+  try{
+    if(!('caches' in window)) return;
+    const params=new URLSearchParams(location.search);
+    if(!params.get('share')) return;
+    const cache=await caches.open('share-img');
+    const resp=await cache.match('shared-image');
+    if(resp){ const blob=await resp.blob(); await cache.delete('shared-image'); switchTab('calc'); scanScreenshot(blob); }
+    window.history.replaceState({}, '', location.pathname);
+  }catch(e){}
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+function initSettingsUI(){
+  document.getElementById('s-target').value=cfg.targetHourly;
+  document.getElementById('s-target-lbl').textContent='$'+cfg.targetHourly;
+  document.getElementById('top-target').textContent='$'+cfg.targetHourly+'/hr';
+  document.getElementById('s-goal').value=cfg.dailyGoal;
+  document.getElementById('s-goal-lbl').textContent='$'+cfg.dailyGoal;
+  document.getElementById('s-shifthrs').value=cfg.shiftGoalHours;
+  document.getElementById('s-shifthrs-lbl').textContent=cfg.shiftGoalHours+'h';
+  document.getElementById('net-toggle').textContent=cfg.gradeOnNet?'ON':'OFF';
+  document.getElementById('speak-toggle').textContent=cfg.speakVerdict?'ON':'OFF';
+  document.getElementById('driving-toggle').textContent=cfg.drivingMode?'ON':'OFF';
+  document.getElementById('s-return').value=cfg.returnFactor;
+  document.getElementById('s-return-lbl').textContent=Math.round(cfg.returnFactor*100)+'%';
+  document.getElementById('s-tax').value=cfg.taxPct;
+  document.getElementById('s-tax-lbl').textContent=Math.round(cfg.taxPct*100)+'%';
+  document.getElementById('s-mpg').value=cfg.mpg;
+  document.getElementById('s-gas').value=cfg.gasPrice;
+  document.getElementById('s-speed').value=cfg.avgSpeed;
+  document.getElementById('s-idle').value=cfg.idleMin;
+  document.getElementById('s-w1').value=cfg.firstWait;
+  document.getElementById('s-wx').value=cfg.extraWait;
+  document.getElementById('s-irs').value=cfg.irsRate;
+  document.getElementById('s-irs-lbl').textContent='$'+Number(cfg.irsRate).toFixed(3).replace(/0$/,'');
+  refreshCpmHint();
+}
+
+load();
+// migrate legacy entries
+history.forEach(r=>{ r.id=safeId(r.id); if(!r.platform) r.platform='uber'; if(!r.status) r.status='completed'; if(r.startedAt==null) r.startedAt=r.ts||Date.now(); if(r.actualP===undefined) r.actualP=null; });
+normalizeIds();
+initSettingsUI();
+document.body.classList.toggle('driving',!!cfg.drivingMode);
+setStops(1);
+setPlatform(cfg.platform||'uber');
+updateShiftBanner();
+checkSharedImage();
+setInterval(()=>{ if(activeShift) updateShiftBanner(); }, 30000);
+
+document.getElementById('build-note').textContent = (location.protocol==='file:')
+  ? 'Running from a file — host it (or install) to enable offline + screenshot Share Target.'
+  : 'Offline ready. Tip: install to home screen for Share-to-scan.';
+document.getElementById('footer-note').textContent = 'DeliveryBuddy MK2 · Uber · DoorDash · Grubhub · saved on device';
+
+// register service worker (only over http/https)
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>

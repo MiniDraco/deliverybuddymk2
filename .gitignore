@@ -1,0 +1,4 @@
+node_modules/
+*.log
+tests/_probe*.mjs
+tests/_chk.mjs

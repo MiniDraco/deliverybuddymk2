@@ -1,0 +1,224 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Oblique >>
+endobj
+4 0 obj
+<< /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >>
+endobj
+5 0 obj
+<< /Type /Pages /Count 6 /Kids [7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R] >>
+endobj
+6 0 obj
+<< /Length 3114 >>
+stream
+BT /F2 20 Tf 0.29 0.87 0.5 rg 54 712 Td (DeliveryBuddy MK2) Tj ET
+BT /F1 10 Tf 0.45 0.45 0.5 rg 54 689 Td (Install & Usage Guide - food / product delivery profit analyzer \(Uber - DoorDash -) Tj ET
+BT /F1 10 Tf 0.45 0.45 0.5 rg 54 674.5 Td (Grubhub\)) Tj ET
+0.8 0.82 0.85 RG 0.7 w 54 652 m 558 652 l S
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 620 Td (1. What it is) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 599.7 Td (DeliveryBuddy MK2 is a single-file, installable web app \(PWA\) that tells you whether) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 585.2 Td (a) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 565.7 Td (delivery offer is worth taking. You enter the payout, miles, and number of stops; it) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 546.2 Td (grades the offer against your target $/hr after fuel and deadhead \(empty miles) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 531.7 Td (back\).) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 512.2 Td (Everything runs on your phone. There is no account, no server, and no data leaves) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 497.7 Td (the) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 478.2 Td (device - all history is stored locally in the browser.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 452.7 Td (It is a profit ANALYZER only. It does not auto-accept offers or automate the) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 438.2 Td (delivery) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 418.7 Td (apps in any way.) Tj ET
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 385.2 Td (2. What you need) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 364.9 Td (* An Android phone \(built and tested on a Pixel 9\) with Chrome, or any modern) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 350.4 Td (  browser.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 332.9 Td (* The app folder "deliverybuddymk2" containing: index.html, manifest.webmanifest,) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 318.4 Td (  sw.js, and icon.svg.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 300.9 Td (* A way to serve the folder over https or localhost \(see Section 3\). Opening the) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 286.4 Td (  file directly with file:// will show the app but WILL NOT install or accept) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 271.9 Td (  screenshots.) Tj ET
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 240.4 Td (3. Install on your phone) Tj ET
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 213.1 Td (Why hosting is required) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 195.15 Td (Install + Share-to-app \(screenshot OCR\) only work over https or localhost. Pick ONE) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 180.65 Td (of) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 161.15 Td (the hosting options below, then do "Add to Home screen".) Tj ET
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 134.65 Td (Option A - GitHub Pages \(free, permanent link\)) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 116.7 Td (* Create a new GitHub repository and upload the four app files to the root.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 99.2 Td (* In the repo: Settings > Pages > Build from branch > main > / \(root\) > Save.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 81.7 Td (* Wait ~1 minute; open the https://<you>.github.io/<repo>/ link on your phone.) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 5 0 R /MediaBox [0 0 612 792] /Resources 4 0 R /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 1666 >>
+stream
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 721 Td (Option B - Netlify / Cloudflare Pages \(drag-and-drop\)) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 703.05 Td (* Go to app.netlify.com \(or Cloudflare Pages\) and sign in.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 685.55 Td (* Drag the "deliverybuddymk2" folder onto the deploy area.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 668.05 Td (* Open the generated https link on your phone.) Tj ET
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 643.55 Td (Option C - Local server \(same Wi-Fi, no internet host\)) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 625.6 Td (From the folder on a computer, run one of:) Tj ET
+BT /F1 9.5 Tf 0.15 0.3 0.55 rg 70 606.6 Td (python -m http.server 8732) Tj ET
+BT /F1 9.5 Tf 0.15 0.3 0.55 rg 70 588.82 Td (npx serve .) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 570.55 Td (Then on the phone \(same Wi-Fi\) open http://<computer-ip>:8732/. Note: a plain LAN IP) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 551.05 Td (over http counts as "not secure", so install may be blocked - use localhost on the) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 531.55 Td (device itself, or prefer Option A/B for the real phone install.) Tj ET
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 505.05 Td (Add to Home screen / Install) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 487.1 Td (* Open the hosted link in Chrome on the phone.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 469.6 Td (* Tap the menu \(three dots\) > "Install app" or "Add to Home screen".) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 452.1 Td (* Launch it from the new icon - it now runs full-screen like a native app and) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 437.6 Td (  works offline \(the service worker caches it\).) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 5 0 R /MediaBox [0 0 612 792] /Resources 4 0 R /Contents 8 0 R >>
+endobj
+10 0 obj
+<< /Length 3599 >>
+stream
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 708 Td (4. First-time setup \(More tab\)) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 687.7 Td (Open the "More" tab and set these once so the math fits your car and goals:) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 668.2 Td (* Target $/hr - the bar every offer must clear \(default $20\).) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 650.7 Td (* Daily goal $ - drives the progress bar on Stats \(default $150\).) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 633.2 Td (* Grade on NET - on = grade after fuel cost \(recommended\); off = grade on gross.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 615.7 Td (* MPG and Gas price - your fuel economy and local pump price \(default 25 mpg /) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 601.2 Td (  $3.50\).) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 583.7 Td (* Return factor - share of miles you drive back empty \(default 0.40 = 40%\).) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 566.2 Td (* Avg speed, First-stop wait, Extra-stop wait, Idle min - the drive/wait model.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 548.7 Td (* Tax set-aside % - what to park for taxes \(default 25%\).) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 531.2 Td (* IRS rate - mileage deduction estimate shown in Stats \(default $0.67/mi\).) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 507.7 Td (Optional comfort toggles: "Speak the verdict" \(reads the result aloud\) and "Driving) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 488.2 Td (mode" \(bigger buttons and text for hands-light use\).) Tj ET
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 454.7 Td (5. The five tabs) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 434.4 Td (* Offer - enter an offer and Analyze it; this is the home screen.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 416.9 Td (* Stats - net profit, daily-goal bar, real $/hr, accept rate, taxes, expenses,) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 402.4 Td (  forecast.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 384.9 Td (* History- every analyzed/accepted offer; mark done, add tips, backfill miles,) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 370.4 Td (  delete.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 352.9 Td (* Min $ - reference table: the minimum payout to clear your target at each) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 338.4 Td (  distance.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 320.9 Td (* More - all settings, plus backup / restore / CSV export.) Tj ET
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 289.4 Td (6. Daily workflow) Tj ET
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 262.1 Td (Standard \(you have a moment to read the offer\)) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 244.15 Td (* On the Offer tab, type the payout and miles, set the number of stops.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 226.65 Td (* Tap Analyze. You get a verdict \(GREAT / WORTH IT / BORDERLINE / SKIP IT\), an) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 212.15 Td (  acceptance score 0-100, the net $, and the real $/hr after fuel + deadhead.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 194.65 Td (* Tap "Accept & Start" if you take it, or "Decline" to log the pass.) Tj ET
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 170.15 Td (When you must accept FIRST \(no time to read\)) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 152.2 Td (* Tap "Confirm Ride Now" - it logs the start time instantly, even with empty) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 137.7 Td (  fields.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 120.2 Td (* Later, open History and backfill payout / miles, then "Mark done" to stamp the) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 105.7 Td (  end time and compute your real $/hr and actual $/mi. "Tip" sets the final) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 91.2 Td (  payout.) Tj ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 5 0 R /MediaBox [0 0 612 792] /Resources 4 0 R /Contents 10 0 R >>
+endobj
+12 0 obj
+<< /Length 989 >>
+stream
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 721 Td (Compare two stacked offers) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 703.05 Td (* Analyze offer A, tap the COMPARE button to hold it, then analyze offer B - the) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 688.55 Td (  app shows which one wins.) Tj ET
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 657.05 Td (7. Fast input options) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 636.75 Td (* Screenshot OCR - share a screenshot of the offer to DeliveryBuddy \(Android) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 622.25 Td (  share sheet\). It reads the largest $ as payout, the first "x mi", and the stop) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 607.75 Td (  count, then auto-analyzes. \(On-device, lazy-loaded; needs the installed app.\)) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 590.25 Td (* Voice entry - tap the mic and say e.g. "9 dollars 50, 4 miles, 2 stops".) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 572.75 Td (* Paste - copy offer text, tap Paste, and it parses the same way.) Tj ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 5 0 R /MediaBox [0 0 612 792] /Resources 4 0 R /Contents 12 0 R >>
+endobj
+14 0 obj
+<< /Length 3432 >>
+stream
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 708 Td (8. Shifts, stats, taxes & expenses) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 687.7 Td (* Start shift / End shift \(Stats tab\) tracks your real online hours so $/hr is) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 673.2 Td (  honest.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 655.7 Td (* Stats window toggles Today / 7-day / All.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 638.2 Td (* Tax jar shows what to set aside \(your % of take-home, never on a loss\).) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 620.7 Td (* Expense tracker - add gas, tolls, supplies; they reduce take-home and the tax) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 606.2 Td (  basis.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 588.7 Td (* Earnings forecast projects today's pace to your shift-goal hours.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 571.2 Td (* Decline-regret flags declined offers that would have beaten your average.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 553.7 Td (* Weather-aware target - optional one-tap check \(free, no key\) suggests +10%) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 539.2 Td (  target in rough conditions; it fails gracefully if you decline location.) Tj ET
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 507.7 Td (9. Backup, restore & export) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 487.4 Td (* Export JSON \(More tab\) saves a full backup: settings, history, shifts,) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 472.9 Td (  expenses.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 455.4 Td (* Import JSON restores a backup. Malformed files are rejected safely.) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 437.9 Td (* Export CSV gives a spreadsheet of your history \(one row per offer, with the) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 423.4 Td (  score\).) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 54 405.9 Td (Tip: export a JSON backup before clearing history or switching phones.) Tj ET
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 372.4 Td (10. Privacy & data) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 352.1 Td (* 100% on-device. No account, no analytics, no server calls \(except the optional) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 337.6 Td (  weather check and the one-time OCR engine download\).) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 320.1 Td (* Data lives in your browser storage under "db-*" keys. Clearing browser data or) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 305.6 Td (  uninstalling removes it - keep a JSON backup.) Tj ET
+BT /F2 14 Tf 0.29 0.87 0.5 rg 54 274.1 Td (11. Troubleshooting) Tj ET
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 246.8 Td (No "Install" option appears) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 228.85 Td (* You are likely on file:// or plain http. Use https \(Option A/B\) and open in) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 214.35 Td (  Chrome.) Tj ET
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 189.85 Td (Sharing a screenshot does nothing) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 171.9 Td (* Share Target only works after the app is installed from an https origin.) Tj ET
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 147.4 Td (Numbers look wrong after importing an old backup) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 129.45 Td (* The app sanitizes imported data on load, but check the More tab values \(MPG,) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 114.95 Td (  gas, target\) match your setup - a bad import is coerced to safe defaults, not) Tj ET
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 100.45 Td (  your prefs.) Tj ET
+BT /F2 11 Tf 0.1 0.1 0.12 rg 54 75.95 Td (OCR misreads an offer) Tj ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 5 0 R /MediaBox [0 0 612 792] /Resources 4 0 R /Contents 14 0 R >>
+endobj
+16 0 obj
+<< /Length 366 >>
+stream
+BT /F1 10 Tf 0.1 0.1 0.12 rg 70 722 Td (* Screenshots vary by app; just correct the payout/miles fields and re-Analyze.) Tj ET
+0.8 0.82 0.85 RG 0.7 w 54 710.5 m 558 710.5 l S
+BT /F1 10 Tf 0.45 0.45 0.5 rg 54 692.5 Td (Single-file PWA - no backend - all data on your device. Drive safe and pick the good) Tj ET
+BT /F1 10 Tf 0.45 0.45 0.5 rg 54 678 Td (offers.) Tj ET
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 5 0 R /MediaBox [0 0 612 792] /Resources 4 0 R /Contents 16 0 R >>
+endobj
+18 0 obj
+<< /Type /Catalog /Pages 5 0 R >>
+endobj
+xref
+0 19
+0000000000 65535 f 
+0000000015 00000 n 
+0000000083 00000 n 
+0000000156 00000 n 
+0000000232 00000 n 
+0000000295 00000 n 
+0000000386 00000 n 
+0000003551 00000 n 
+0000003655 00000 n 
+0000005372 00000 n 
+0000005476 00000 n 
+0000009127 00000 n 
+0000009233 00000 n 
+0000010273 00000 n 
+0000010379 00000 n 
+0000013863 00000 n 
+0000013969 00000 n 
+0000014386 00000 n 
+0000014492 00000 n 
+trailer
+<< /Size 19 /Root 18 0 R >>
+startxref
+14542
+%%EOF
