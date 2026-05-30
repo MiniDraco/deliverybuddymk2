@@ -355,6 +355,20 @@
           • <b>Start shift</b> on the Stats tab to track real $/hr, taxes &amp; expenses.<br>
           • Everything saves on this device. Use <b>Backup JSON</b> before clearing.
         </div>
+        <button class="ghost" style="margin-top:12px;width:100%" onclick="toggleHelp()">❔ How to install &amp; full help</button>
+        <div id="help-panel" style="display:none;font-size:12px;color:#9ca3af;line-height:1.6;margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px">
+          <b style="color:#e5e7eb">Install on a Pixel / Android phone</b><br>
+          1. Open the link in <b>Chrome</b>: <span style="color:#cbd5e1">github.com/&lt;you&gt;/deliverybuddymk2</span> → tap the Pages link.<br>
+          2. Chrome menu (⋮) → <b>Install app</b> (or <b>Add to Home screen</b>).<br>
+          3. Open it from the home-screen icon — now it runs full-screen and offline, and <b>Share → DeliveryBuddy</b> can scan offer screenshots.<br><br>
+          <b style="color:#e5e7eb">The 5 tabs</b><br>
+          • <b>Offer</b> — grade a delivery offer (payout, miles, stops) → keep/skip verdict.<br>
+          • <b>Stats</b> — start a shift, watch real $/hr, taxes &amp; fuel.<br>
+          • <b>History</b> — every logged offer; fill in final payout later.<br>
+          • <b>Min $</b> — your break-even reference per mile.<br>
+          • <b>More</b> — settings, backup/restore, this help.<br><br>
+          <b style="color:#e5e7eb">Privacy</b> — everything stays on this device (localStorage). No account, no server. Use <b>Backup JSON</b> before clearing data.
+        </div>
         <div id="build-note" style="font-size:10px;color:var(--faint);margin-top:10px"></div>
       </div>
     </div>
@@ -1080,6 +1094,7 @@ function refreshCpmHint(){ const el=document.getElementById('cpm-hint'); if(el) 
 // ── INSTALL ──────────────────────────────────────────────────────────────────
 window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); deferredInstall=e; const b=document.getElementById('install-btn'); if(b) b.style.display='block'; });
 async function doInstall(){ if(!deferredInstall){ toast('Use browser menu → Install app'); return; } deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall=null; document.getElementById('install-btn').style.display='none'; }
+function toggleHelp(){ const p=document.getElementById('help-panel'); if(p) p.style.display = (p.style.display==='none'?'block':'none'); }
 
 // ── EXPORT / IMPORT ──────────────────────────────────────────────────────────
 function download(name,text,type){ const b=new Blob([text],{type}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),2000); }
