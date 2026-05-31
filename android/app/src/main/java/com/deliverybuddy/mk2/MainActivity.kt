@@ -1,5 +1,7 @@
 package com.deliverybuddy.mk2
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,6 +27,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Store.init(this)
+        handleSharedImage(intent)
         setContent {
             MaterialTheme(
                 colorScheme = darkColorScheme(
@@ -36,6 +39,34 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleSharedImage(intent)
+    }
+
+    /** A screenshot shared into the app → OCR → parse → Store.captured banner. */
+    private fun handleSharedImage(intent: Intent?) {
+        if (intent?.action != Intent.ACTION_SEND) return
+        if (intent.type?.startsWith("image/") != true) return
+        @Suppress("DEPRECATION")
+        val uri: Uri = intent.getParcelableExtra(Intent.EXTRA_STREAM) ?: return
+        OfferOcr.scan(
+            applicationContext, uri,
+            onText = { text ->
+                val parsed = Engine.parseOffer(text)
+                if (parsed.payout != null || parsed.miles != null) {
+                    Store.captured.value = CapturedOffer(
+                        platform = Store.cfg.value.platform,
+                        payout = parsed.payout, miles = parsed.miles, stops = parsed.stops,
+                        raw = text.take(300), ts = System.currentTimeMillis(),
+                    )
+                }
+            },
+            onError = { },
+        )
     }
 }
 

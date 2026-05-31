@@ -1,5 +1,7 @@
 package com.deliverybuddy.mk2
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -82,6 +84,28 @@ fun OfferScreen() {
 
     fun reset() {
         payout = ""; miles = ""; result = null; verdict = null; analysis = null
+    }
+
+    fun applyParsed(parsed: ParsedOffer, source: String) {
+        if (parsed.payout == null && parsed.miles == null) {
+            error = "Couldn't read an offer from that $source — type it in"; toast = null; return
+        }
+        parsed.payout?.let { payout = f2(it) }
+        parsed.miles?.let { miles = f2(it) }
+        parsed.stops?.let { stops = it }
+        if (parsed.payout != null && parsed.miles != null) analyze()
+        else { error = "Got part of it — fill the rest and Analyze"; toast = null }
+    }
+
+    val ocrLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            error = null; toast = "Scanning screenshot…"
+            OfferOcr.scan(
+                ctx, uri,
+                onText = { text -> toast = null; applyParsed(Engine.parseOffer(text), "screenshot") },
+                onError = { e -> error = "Scan failed: ${e.message}"; toast = null },
+            )
+        }
     }
 
     Column(
@@ -195,11 +219,18 @@ fun OfferScreen() {
             }
         }
 
-        Button(
-            onClick = { analyze() },
-            colors = ButtonDefaults.buttonColors(containerColor = Ui.ORANGE),
-            modifier = Modifier.fillMaxWidth(),
-        ) { Text("Analyze", color = Color.White, fontWeight = FontWeight.Bold) }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = { ocrLauncher.launch("image/*") },
+                colors = ButtonDefaults.buttonColors(containerColor = Ui.CARD),
+                modifier = Modifier.weight(1f),
+            ) { Text("📷 Scan screenshot", color = Ui.TEXT, fontSize = 13.sp) }
+            Button(
+                onClick = { analyze() },
+                colors = ButtonDefaults.buttonColors(containerColor = Ui.ORANGE),
+                modifier = Modifier.weight(1f),
+            ) { Text("Analyze", color = Color.White, fontWeight = FontWeight.Bold) }
+        }
 
         error?.let { Text(it, color = Ui.RED, fontSize = 13.sp) }
         toast?.let { Text(it, color = Ui.GREEN, fontSize = 13.sp) }
