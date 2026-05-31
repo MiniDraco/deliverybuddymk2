@@ -19,6 +19,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,10 +27,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 
 @Composable
 fun OfferScreen() {
@@ -44,6 +49,19 @@ fun OfferScreen() {
     var analysis by remember { mutableStateOf<Analysis?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
     var toast by remember { mutableStateOf<String?>(null) }
+
+    // notification auto-capture state
+    val ctx = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var captureEnabled by remember { mutableStateOf(CaptureAccess.isEnabled(ctx)) }
+    DisposableEffect(lifecycleOwner) {
+        val obs = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) captureEnabled = CaptureAccess.isEnabled(ctx)
+        }
+        lifecycleOwner.lifecycle.addObserver(obs)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(obs) }
+    }
+    val captured = Store.captured.value
 
     fun analyze() {
         val p = payout.toDoubleOrNull()
@@ -75,6 +93,56 @@ fun OfferScreen() {
     ) {
         Text("DeliveryBuddy", color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Text("Is this offer worth it?", color = Ui.MUTED, fontSize = 13.sp)
+
+        // captured-offer banner (from a delivery-app notification)
+        if (captured != null && System.currentTimeMillis() - captured.ts < 10 * 60 * 1000) {
+            SectionCard(bg = Color(0x1AFF7A18)) {
+                Label("📥 Captured from ${platformOf(captured.platform).name} notification", Ui.ORANGE)
+                Text(
+                    listOfNotNull(
+                        captured.payout?.let { "\$${f2(it)}" },
+                        captured.miles?.let { "${f2(it)} mi" },
+                        captured.stops?.let { "$it stop${if (it > 1) "s" else ""}" },
+                    ).joinToString(" · ").ifBlank { "Offer detected" },
+                    color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold,
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
+                    Button(
+                        onClick = {
+                            captured.payout?.let { payout = f2(it) }
+                            captured.miles?.let { miles = f2(it) }
+                            captured.stops?.let { stops = it }
+                            Store.updateCfg { it.copy(platform = captured.platform) }
+                            Store.captured.value = null
+                            analyze()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Ui.ORANGE),
+                        modifier = Modifier.weight(1f),
+                    ) { Text("Load & grade", color = Color.White, fontWeight = FontWeight.Bold) }
+                    Button(
+                        onClick = { Store.captured.value = null },
+                        colors = ButtonDefaults.buttonColors(containerColor = Ui.CARD),
+                    ) { Text("Dismiss", color = Ui.MUTED) }
+                }
+            }
+        }
+
+        // auto-capture onboarding (only while disabled)
+        if (!captureEnabled) {
+            SectionCard {
+                Label("Auto-capture offers")
+                Text(
+                    "Let DeliveryBuddy read your Uber/DoorDash/Grubhub offer notifications " +
+                        "so it can grade them automatically — read-only, on this device.",
+                    color = Ui.MUTED, fontSize = 12.sp, modifier = Modifier.padding(vertical = 6.dp),
+                )
+                Button(
+                    onClick = { CaptureAccess.openSettings(ctx) },
+                    colors = ButtonDefaults.buttonColors(containerColor = Ui.ORANGE),
+                    modifier = Modifier.fillMaxWidth(),
+                ) { Text("Enable notification access", color = Color.White, fontWeight = FontWeight.Bold) }
+            }
+        }
 
         // platform selector
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {

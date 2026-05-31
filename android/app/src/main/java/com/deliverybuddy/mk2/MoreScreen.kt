@@ -18,11 +18,15 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -40,6 +44,16 @@ fun MoreScreen() {
     val clipboard = LocalClipboardManager.current
     val ctx = LocalContext.current
     var showRestore by remember { mutableStateOf(false) }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var captureEnabled by remember { mutableStateOf(CaptureAccess.isEnabled(ctx)) }
+    DisposableEffect(lifecycleOwner) {
+        val obs = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) captureEnabled = CaptureAccess.isEnabled(ctx)
+        }
+        lifecycleOwner.lifecycle.addObserver(obs)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(obs) }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
@@ -74,6 +88,32 @@ fun MoreScreen() {
             Label("Taxes")
             NumField("Tax set-aside (0.25 = 25%)", cfg.taxPct) { Store.updateCfg { c -> c.copy(taxPct = it) } }
             NumField("IRS mileage rate (\$/mi)", cfg.irsRate) { Store.updateCfg { c -> c.copy(irsRate = it) } }
+        }
+
+        SectionCard {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically) {
+                Label("Notification auto-capture")
+                Text(
+                    if (captureEnabled) "● On" else "○ Off",
+                    color = if (captureEnabled) Ui.GREEN else Ui.MUTED, fontSize = 12.sp, fontWeight = FontWeight.Bold,
+                )
+            }
+            Text(
+                "Reads your Uber/DoorDash/Grubhub offer notifications (read-only, on-device) " +
+                    "and auto-grades them on the Offer tab.",
+                color = Ui.MUTED, fontSize = 12.sp, modifier = Modifier.padding(vertical = 6.dp),
+            )
+            Button(
+                onClick = { CaptureAccess.openSettings(ctx) },
+                colors = ButtonDefaults.buttonColors(containerColor = if (captureEnabled) Ui.CARD else Ui.ORANGE),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    if (captureEnabled) "Manage notification access" else "Enable notification access",
+                    color = if (captureEnabled) Ui.TEXT else Color.White, fontSize = 13.sp,
+                )
+            }
         }
 
         SectionCard {

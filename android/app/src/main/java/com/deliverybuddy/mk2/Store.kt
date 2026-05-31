@@ -33,6 +33,16 @@ data class Expense(val id: String, val ts: Long, val kind: String, val amount: D
 fun uid(): String =
     System.currentTimeMillis().toString(36) + Random.nextInt(0, 1 shl 20).toString(36).padStart(4, '0').takeLast(4)
 
+/** An offer parsed out of a delivery-app notification (read-only capture). */
+data class CapturedOffer(
+    val platform: String,
+    val payout: Double?,
+    val miles: Double?,
+    val stops: Int?,
+    val raw: String,
+    val ts: Long,
+)
+
 /** What the Offer screen hands to decide/accept actions. */
 data class Analysis(
     val p: Double,
@@ -59,6 +69,9 @@ object Store {
 
     var statsWindow = mutableStateOf("today")   // today | week | all
     var histFilter = mutableStateOf("all")      // all | accepted | completed | declined
+
+    /** Most-recent offer auto-captured from a delivery-app notification. */
+    var captured = mutableStateOf<CapturedOffer?>(null)
 
     fun init(ctx: Context) {
         if (::prefs.isInitialized) return
