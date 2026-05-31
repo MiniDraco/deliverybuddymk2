@@ -65,12 +65,21 @@ class EngineTest {
     }
 
     @Test
-    fun parseOffer_commasAndMiles() {
-        val p = Engine.parseOffer("Earn \$1,234 nope filtered; pay \$9 for 12 miles")
-        // 1234 is >= 500 so filtered out, 9 remains
+    fun parseOffer_filtersHugeAndReadsMiles() {
+        val p = Engine.parseOffer("Big \$650 banner; pay \$9 for 12 miles")
+        // 650 >= 500 -> filtered out, 9 remains as the largest valid payout
         assertEquals(9.0, p.payout!!, 1e-9)
         assertEquals(12.0, p.miles!!, 1e-9)
         assertNull(p.stops)
+    }
+
+    @Test
+    fun parseOffer_threeDigitCapMatchesJs() {
+        // Faithful to the JS regex \d{1,3}: commas are stripped, then only the
+        // first 3 digits are captured, so "$1,234" -> "$1234" -> 123 (a known
+        // quirk shared with the PWA; documented so the port stays in lock-step).
+        val p = Engine.parseOffer("Total \$1,234")
+        assertEquals(123.0, p.payout!!, 1e-9)
     }
 
     @Test
