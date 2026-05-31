@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- orange disc -->
+    <path
+        android:fillColor="#FFFF7A18"
+        android:pathData="M54,30 a24,24 0 1,0 0.1,0 z" />
+    <!-- white check -->
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M43,55 L51,64 L67,44" />
+</vector>

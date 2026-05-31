@@ -2,3 +2,13 @@ node_modules/
 *.log
 tests/_probe*.mjs
 tests/_chk.mjs
+tests/_offer_sample.png
+
+# Android / Gradle
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.iml
+.idea/
