@@ -2,7 +2,47 @@
 
 A fast, private, offline-first **delivery offer grader** for gig drivers (Uber Eats / DoorDash / Grubhub — food **and** product). Punch in a payout, miles, and stops and it tells you in a glance whether the offer clears your hourly target after fuel, deadhead, and taxes. Built as a single-file Progressive Web App (PWA) that runs great on a **Pixel 9**.
 
-> **Live app:** once published, open `https://<your-username>.github.io/deliverybuddymk2/` on your phone.
+> **Live app (PWA):** open `https://minidraco.github.io/deliverybuddymk2/` on your phone.
+>
+> **Native Android app (APK):** there's now a full native build with two features a web app physically can't do — **notification auto-capture** and **offline screenshot OCR**. See *Install the native Android app* below.
+
+---
+
+## Install the native Android app (APK)
+
+The native app is real Kotlin/Jetpack-Compose — not a web wrapper — and adds:
+
+- **📥 Notification auto-capture** — reads your *own* Uber / DoorDash / Grubhub offer notifications (read-only, on-device) and grades them automatically. No auto-accept, no automation that touches the platforms.
+- **📷 Offline OCR** — scan or share an offer screenshot and it reads the payout/miles with ML Kit, fully offline (no internet, no Tesseract CDN).
+
+### 1. Download the APK
+
+Grab **`app-debug.apk`** from the latest **[Release](../../releases/latest)**. (Older builds are also attached to each green run on the **[Actions](../../actions)** tab as the `deliverybuddy-debug-apk` artifact.)
+
+Download it directly on the phone, or copy it over via USB.
+
+### 2. Allow install from your browser / files app
+
+Android blocks sideloaded APKs by default:
+
+1. Tap the downloaded `app-debug.apk`.
+2. When prompted, **Settings → "Allow from this source"** (this is per-app: enable it for Chrome or your Files app), then back out and tap the APK again.
+3. Tap **Install** → **Open**.
+
+> It's signed with a debug key (fine for personal sideloading). Android may show a Play Protect "unrecognized app" notice — choose **Install anyway**.
+
+### 3. Turn on notification auto-capture (optional but it's the headline feature)
+
+1. Open the app → **Offer** tab (or **More** tab) → **Enable notification access**.
+2. In the system list, toggle **DeliveryBuddy offer capture** on and confirm.
+3. Back in the app — when an Uber/DoorDash/Grubhub offer notification arrives, a **"Load & grade"** banner appears on the Offer tab.
+
+### 4. Scan a screenshot
+
+- In-app: **Offer → 📷 Scan screenshot**, pick the image.
+- Or from anywhere: screenshot the offer → **Share → DeliveryBuddy**.
+
+> All data stays on the device (no account, no server). Use **More → Copy backup** before wiping or switching phones.
 
 ---
 
