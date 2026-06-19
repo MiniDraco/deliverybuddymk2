@@ -1,14 +1,58 @@
+# deps / envs
 node_modules/
+.next/
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+# build outputs
+dist/
+build/
+out/
+outputs/
+output/
+.cache/
+*.tsbuildinfo
+# models / weights
+models/
+model/
+weights/
+checkpoints/
+*.gguf
+*.onnx
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.pkl
+# large binaries / archives / media
+*.exe
+*.dll
+*.so
+*.dylib
+*.7z
+*.zip
+*.rar
+*.tar
+*.gz
+*.apk
+*.webm
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.mp3
+*.wav
+*.flac
+# secrets / local
+.env
+.env.*
+*.local
 *.log
-tests/_probe*.mjs
-tests/_chk.mjs
-tests/_offer_sample.png
-
-# Android / Gradle
-android/.gradle/
-android/build/
-android/app/build/
-android/local.properties
-android/.idea/
-*.iml
-.idea/
+.DS_Store
+Thumbs.db
